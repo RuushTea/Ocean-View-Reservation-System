@@ -1,6 +1,8 @@
 package com.oceanview.reservation.servlet;
 
+import com.oceanview.reservation.util.DBConnectionManager;
 import java.io.*;
+import java.sql.Connection;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
@@ -13,15 +15,10 @@ public class HelloServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
-
-        // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + message + "</h1>");
-        out.println("</body></html>");
-    }
-
-    public void destroy() {
+        try (Connection con = DBConnectionManager.getConnection()) {
+            System.out.println("I am finally connected");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
