@@ -14,10 +14,6 @@ import java.sql.SQLException;
 @WebServlet(name = "AuthenticationServlet", value = "/auth")
 public class AuthenticationServlet extends HttpServlet{
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try (Connection con = DBConnectionManager.getConnection()){
-            System.out.println("I am going to doGet");
-        }  catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-        }
+
     }
 }

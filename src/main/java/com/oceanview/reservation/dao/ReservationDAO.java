@@ -12,6 +12,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class ReservationDAO {
+
+    private void setReservation(Reservation reservation, PreparedStatement ps) throws SQLException {
+        ps.setInt(1, reservation.getGuest().getGuestId());
+        ps.setInt(2, reservation.getRoom().getRoomId());
+        ps.setDate(3, reservation.getCheckInDate());
+        ps.setDate(4, reservation.getCheckOutDate());
+        ps.setString(5, reservation.getStatus());
+
+        ps.executeUpdate();
+    }
+
+
     public void insert(Reservation reservation) {
         String sql = "INSERT INTO reservation (guestId, roomId, checkInDate, checkOutDate, status) VALUES (?, ?, ?, ?, ?)";
 
@@ -47,15 +59,7 @@ public class ReservationDAO {
         return 0;
     }
 
-    private void setReservation(Reservation reservation, PreparedStatement ps) throws SQLException {
-        ps.setInt(1, reservation.getGuest().getGuestId());
-        ps.setInt(2, reservation.getRoom().getRoomId());
-        ps.setDate(3, reservation.getCheckInDate());
-        ps.setDate(4, reservation.getCheckOutDate());
-        ps.setString(5, reservation.getStatus());
 
-        ps.executeUpdate();
-    }
 
     public Reservation findByReservationNo(int reservationId) {
         String sql = "SELECT res.reservationId, res.checkInDate, res.checkOutDate, res.status, " +

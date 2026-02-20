@@ -24,22 +24,28 @@ public class ReservationServiceImpl implements ReservationService{
             return null;
         }
 
-        // Check if guest already exists
-        System.out.println(guest.getGuestId());
-        if (guest.getGuestId() == 0){
-            try {
-                int newGuestId = guestDAO.insertGuestAndReturnId(guest);
-                guest = guestDAO.findByGuestId(newGuestId);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         // Find available room
         Room room = roomDAO.findAvailableRoom(roomTypeId, checkIn, checkOut);
         if (room == null){
             return null;
         }
+
+        // Check if guest already exists
+        if (guest.getGuestId() == 0){
+            try {
+                Guest existingGuest = guestDAO.findByContactNo(guest.getContactNo());
+                if (existingGuest != null){
+                    guest = existingGuest;
+                } else {
+                    int newGuestId = guestDAO.insertGuestAndReturnId(guest);
+                    guest = guestDAO.findByGuestId(newGuestId);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
 
         Reservation reservation = new Reservation(guest, room, checkIn, checkOut, "CONFIRMED");
 

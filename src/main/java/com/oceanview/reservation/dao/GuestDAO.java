@@ -56,7 +56,6 @@ public class GuestDAO {
             try (ResultSet rs = ps.getGeneratedKeys()){
                 if (rs.next()) {
                     int guestId = rs.getInt(1);
-                    System.out.println("guest created with id: " + guestId);
                     return guestId;
                 }
             }
