@@ -6,9 +6,7 @@ import com.oceanview.reservation.model.Room;
 import com.oceanview.reservation.model.RoomType;
 import com.oceanview.reservation.util.DBConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,16 +18,43 @@ public class ReservationDAO {
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, reservation.getGuest().getGuestId());
-            ps.setInt(2, reservation.getRoom().getRoomId());
-            ps.setDate(3, reservation.getCheckInDate());
-            ps.setDate(4, reservation.getCheckOutDate());
-            ps.setString(5, reservation.getStatus());
-
-            ps.executeUpdate();
+            setReservation(reservation, ps);
         } catch (Exception e) {
             System.out.println("Failed to insert reservation: " + e.getMessage());
         }
+    }
+
+
+    public int insertAndReturnReservationId(Reservation reservation) {
+        String sql = "INSERT INTO reservation (guestId, roomId, checkInDate, checkOutDate, status) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            setReservation(reservation, ps);
+
+            //Return the new reservationID
+            try (ResultSet keys = ps.getGeneratedKeys()){
+                if (keys.next()){
+                    return keys.getInt(1);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Failed to insert reservation: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
+    private void setReservation(Reservation reservation, PreparedStatement ps) throws SQLException {
+        ps.setInt(1, reservation.getGuest().getGuestId());
+        ps.setInt(2, reservation.getRoom().getRoomId());
+        ps.setDate(3, reservation.getCheckInDate());
+        ps.setDate(4, reservation.getCheckOutDate());
+        ps.setString(5, reservation.getStatus());
+
+        ps.executeUpdate();
     }
 
     public Reservation findByReservationNo(int reservationId) {

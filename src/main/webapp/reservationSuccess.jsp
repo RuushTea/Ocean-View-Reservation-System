@@ -20,89 +20,75 @@
 
     Guest guest = reservation.getGuest();
     Room room = reservation.getRoom();
-    RoomType rt = reservation.getRoom().getRoomType();
+    RoomType rt = (room != null ? room.getRoomType() : null);
 %>
 
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Reservation Created</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 24px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { border: 1px solid #ddd; padding: 18px; border-radius: 8px; }
-        .success { background: #e6ffed; border: 1px solid #b7f5c6; padding: 12px; border-radius: 6px; color: #0a5d1a; margin-bottom: 14px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
-        th { width: 240px; color: #444; }
-        .btnrow { margin-top: 16px; display: flex; gap: 10px; }
-        .btn { background: #1f6feb; color: white; padding: 10px 14px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; }
-        .btn.secondary { background: #444; }
-        .btn:hover { opacity: 0.95; }
-        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
-    <h2>Reservation Confirmation</h2>
+<body class="bg-slate-50 text-slate-800">
+<div class="max-w-4xl mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4">Reservation Confirmation</h2>
 
-    <div class="card">
-        <div class="success">
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg p-4 mb-6">
             Reservation created successfully! Your reservation number is:
-            <span class="mono"><strong><%= reservation.getReservationId() %></strong></span>
+            <span class="font-mono font-semibold"><%= reservation.getReservationId() %></span>
         </div>
 
-        <h3>Reservation Details</h3>
-        <table>
-            <tr>
-                <th>Reservation No</th>
-                <td class="mono"><%= reservation.getReservationId() %></td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td><%= reservation.getStatus() %></td>
-            </tr>
-            <tr>
-                <th>Check-in Date</th>
-                <td><%= reservation.getCheckInDate() %></td>
-            </tr>
-            <tr>
-                <th>Check-out Date</th>
-                <td><%= reservation.getCheckOutDate() %></td>
-            </tr>
+        <h3 class="text-lg font-semibold mb-3">Reservation Details</h3>
 
-            <tr><th colspan="2">Guest</th></tr>
-            <tr>
-                <th>Guest Name</th>
-                <td><%= (guest != null ? guest.getName() : "") %></td>
-            </tr>
-            <tr>
-                <th>Contact No</th>
-                <td><%= (guest != null ? guest.getContactNo() : "") %></td>
-            </tr>
-            <tr>
-                <th>Address</th>
-                <td><%= (guest != null ? guest.getAddress() : "") %></td>
-            </tr>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                <p class="text-sm text-slate-500">Reservation No</p>
+                <p class="font-mono font-semibold"><%= reservation.getReservationId() %></p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                <p class="text-sm text-slate-500">Status</p>
+                <p class="font-semibold"><%= reservation.getStatus() %></p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                <p class="text-sm text-slate-500">Check-in Date</p>
+                <p class="font-semibold"><%= reservation.getCheckInDate() %></p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                <p class="text-sm text-slate-500">Check-out Date</p>
+                <p class="font-semibold"><%= reservation.getCheckOutDate() %></p>
+            </div>
+        </div>
 
-            <tr><th colspan="2">Room</th></tr>
-            <tr>
-                <th>Room Number</th>
-                <td><%= (room != null ? room.getRoomNo() : "") %></td>
-            </tr>
-            <tr>
-                <th>Room Type</th>
-                <td><%= (rt != null ? rt.getRoomTypeName() : "") %></td>
-            </tr>
-            <tr>
-                <th>Rate</th>
-                <td><%= (rt != null ? rt.getRatePerNight() : "") %></td>
-            </tr>
-        </table>
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h4 class="font-semibold mb-2">Guest</h4>
+                <div class="bg-white border border-slate-200 rounded-lg p-4 space-y-2">
+                    <p><span class="text-slate-500 text-sm">Name:</span> <span class="font-medium"><%= (guest != null ? guest.getName() : "") %></span></p>
+                    <p><span class="text-slate-500 text-sm">Contact:</span> <span class="font-medium"><%= (guest != null ? guest.getContactNo() : "") %></span></p>
+                    <p><span class="text-slate-500 text-sm">Address:</span> <span class="font-medium"><%= (guest != null ? guest.getAddress() : "") %></span></p>
+                </div>
+            </div>
 
-        <div class="btnrow">
-            <a class="btn" href="<%= request.getContextPath() %>/reservation">Create Another Reservation</a>
-            <a class="btn secondary" href="<%= request.getContextPath() %>/index.jsp">Back to Home</a>
+            <div>
+                <h4 class="font-semibold mb-2">Room</h4>
+                <div class="bg-white border border-slate-200 rounded-lg p-4 space-y-2">
+                    <p><span class="text-slate-500 text-sm">Room Number:</span> <span class="font-medium"><%= (room != null ? room.getRoomNo() : "") %></span></p>
+                    <p><span class="text-slate-500 text-sm">Room Type:</span> <span class="font-medium"><%= (rt != null ? rt.getRoomTypeName() : "") %></span></p>
+                    <p><span class="text-slate-500 text-sm">Rate:</span> <span class="font-medium"><%= (rt != null ? rt.getRatePerNight() : "") %></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <a class="inline-flex justify-center items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700"
+               href="<%= request.getContextPath() %>/reservation">
+                Create Another Reservation
+            </a>
+            <a class="inline-flex justify-center items-center px-4 py-2 rounded-lg bg-slate-800 text-white font-semibold hover:bg-slate-900"
+               href="<%= request.getContextPath() %>/index.jsp">
+                Back to Home
+            </a>
         </div>
     </div>
 </div>

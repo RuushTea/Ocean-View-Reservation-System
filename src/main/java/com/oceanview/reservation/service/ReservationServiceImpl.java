@@ -42,8 +42,9 @@ public class ReservationServiceImpl implements ReservationService{
         }
 
         Reservation reservation = new Reservation(guest, room, checkIn, checkOut, "CONFIRMED");
-        reservationDAO.insert(reservation);
 
+        int generatedId = reservationDAO.insertAndReturnReservationId(reservation);
+        reservation.setReservationId(generatedId);
         return reservation;
     }
 
