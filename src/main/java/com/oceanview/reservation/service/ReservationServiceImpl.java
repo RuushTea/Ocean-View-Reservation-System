@@ -1,14 +1,55 @@
 package com.oceanview.reservation.service;
 
+import com.oceanview.reservation.dao.GuestDAO;
+import com.oceanview.reservation.dao.ReservationDAO;
+import com.oceanview.reservation.dao.RoomDAO;
+import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
+import com.oceanview.reservation.model.Room;
 
-import java.util.Date;
+import java.sql.SQLException;
+import java.sql.Date;
 
 public class ReservationServiceImpl implements ReservationService{
 
-    @Override
-    public void createReservation(Reservation reservation) {
+    private final GuestDAO guestDAO = new GuestDAO();
+    private final RoomDAO roomDAO = new RoomDAO();
+    private final ReservationDAO reservationDAO = new ReservationDAO();
 
+    @Override
+    public Reservation createReservation(Guest guest, int roomTypeId, Date checkIn, Date checkOut) {
+
+        if (checkIn == null || checkOut == null || !checkIn.before(checkOut)) {
+            System.out.println("Invalid check-in or check-out dates.");
+            return null;
+        }
+
+        // Check if guest already exists
+        System.out.println(guest.getGuestId());
+        if (guest.getGuestId() == 0){
+            try {
+                int newGuestId = guestDAO.insertGuestAndReturnId(guest);
+                guest = guestDAO.findByGuestId(newGuestId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Find available room
+        Room room = roomDAO.findAvailableRoom(roomTypeId, checkIn, checkOut);
+        if (room == null){
+            return null;
+        }
+
+        Reservation reservation = new Reservation(guest, room, checkIn, checkOut, "CONFIRMED");
+        reservationDAO.insert(reservation);
+
+        return reservation;
+    }
+
+    @Override
+    public Reservation searchReservation(int reservationId) {
+        return reservationDAO.findByReservationNo(reservationId);
     }
 
     @Override
@@ -25,4 +66,6 @@ public class ReservationServiceImpl implements ReservationService{
     public void cancelReservation(int reservationId) {
 
     }
+
+
 }

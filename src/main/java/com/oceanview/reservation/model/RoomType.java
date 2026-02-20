@@ -8,6 +8,12 @@ public class RoomType {
 
     public RoomType() {}
 
+    public RoomType(int roomTypeId, String roomTypeName, double ratePerNight) {
+        this.roomTypeId = roomTypeId;
+        this.roomTypeName = roomTypeName;
+        this.ratePerNight = ratePerNight;
+    }
+
     public int getRoomTypeId() {
         return roomTypeId;
     }

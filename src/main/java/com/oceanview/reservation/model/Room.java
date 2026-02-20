@@ -3,10 +3,17 @@ package com.oceanview.reservation.model;
 public class Room {
     private int roomId;
     private int roomNo;
-    private int roomTypeId;
     private String status;
+    private RoomType roomType;
 
     public Room() {}
+
+    public Room(int roomId, int roomNo, String status, RoomType roomType) {
+        this.roomId = roomId;
+        this.roomNo = roomNo;
+        this.roomType = roomType;
+        this.status = status;
+    }
 
     public int getRoomId() {
         return roomId;
@@ -24,12 +31,12 @@ public class Room {
         this.roomNo = roomNo;
     }
 
-    public int getRoomTypeId() {
-        return roomTypeId;
+    public RoomType getRoomType() {
+        return roomType;
     }
 
-    public void setRoomTypeId(int roomTypeId) {
-        this.roomTypeId = roomTypeId;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 
     public String getStatus() {

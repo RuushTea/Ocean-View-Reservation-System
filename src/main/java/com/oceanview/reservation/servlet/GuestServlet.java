@@ -19,7 +19,9 @@ public class GuestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         response.setContentType("text/plain");
-        String guestId = request.getParameter("guestId");
+        String guestIdString = request.getParameter("guestId");
+
+        int guestId = Integer.parseInt(guestIdString);
 
         try {
             Guest g = guestDAO.findByGuestId(guestId);

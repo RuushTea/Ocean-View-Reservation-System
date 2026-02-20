@@ -1,11 +1,14 @@
 package com.oceanview.reservation.service;
 
+import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
 
-import java.util.Date;
+import java.sql.Date;
 
 public interface ReservationService {
-    void createReservation(Reservation reservation);
+    Reservation createReservation(Guest guest, int roomTypeId, Date checkIn, Date checkOut);
+
+    Reservation searchReservation(int reservationId);
     void checkAvailability(String roomType, Date checkInDate, Date checkOutDate);
     boolean checkRoomAvailability(int roomTypeId, Date checkInDate, Date checkOutDate);
     void cancelReservation(int reservationId);
