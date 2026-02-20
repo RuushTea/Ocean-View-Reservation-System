@@ -16,11 +16,12 @@ public class GuestDAO {
             try (ResultSet rs = ps.executeQuery()){
                 if (!rs.next()) return null;
 
-                Guest g = new Guest();
-                g.setGuestId(rs.getString("guestId"));
-                g.setName(rs.getString("name"));
-                g.setAddress(rs.getString("address"));
-                g.setContactNo(rs.getString("contactNo"));
+                Guest g = new Guest(
+                        rs.getInt("guestId"),
+                        rs.getString("name"),
+                        rs.getString("address"),
+                        rs.getString("contactNo")
+                );
                 return g;
 
             }
