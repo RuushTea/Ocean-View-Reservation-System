@@ -48,7 +48,7 @@ public class GuestServlet extends HttpServlet {
             Guest guest = new Guest(name, address, contactNo);
             guestDAO.insertGuest(guest);
 
-            response.getWriter().println("Guest added sucessfully");
+            response.getWriter().println("Guest added successfully");
 
         } catch (Exception e){
             System.out.println(e.getMessage());

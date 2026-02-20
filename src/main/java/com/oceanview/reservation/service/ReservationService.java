@@ -1,4 +1,4 @@
 package com.oceanview.reservation.service;
 
-public class ReservationService {
+public interface ReservationService {
 }
