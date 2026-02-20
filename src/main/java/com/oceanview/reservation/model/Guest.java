@@ -6,8 +6,9 @@ public class Guest {
     private String address;
     private String contactNo;
 
-    public Guest(int guestId, String name, String address, String contactNo) {
-        this.guestId = guestId;
+    public Guest(){}
+
+    public Guest(String name, String address, String contactNo) {
         this.name = name;
         this.address = address;
         this.contactNo = contactNo;

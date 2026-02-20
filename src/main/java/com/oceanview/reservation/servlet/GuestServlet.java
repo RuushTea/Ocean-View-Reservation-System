@@ -36,4 +36,23 @@ public class GuestServlet extends HttpServlet {
             System.out.println(e.getMessage());
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+        String name = request.getParameter("name");
+        String address = request.getParameter("address");
+        String contactNo = request.getParameter("contactNo");
+
+        try {
+            Guest guest = new Guest(name, address, contactNo);
+            guestDAO.insertGuest(guest);
+
+            response.getWriter().println("Guest added sucessfully");
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            response.getWriter().println("Error adding guest: " + e.getMessage());
+        }
+    }
 }

@@ -9,7 +9,22 @@
 <br/>
 <a href="hello-servlet">Click here to go to HelloServlet</a>
 <a href="auth">Click here to login</a>
-<\<br>
+<br>
+
+<div>
+  <form action="guest-servlet" method="POST">
+    <label>Name:</label>
+    <input type="text" name="name">
+
+    <label>Address</label>
+    <input type="text" name="address">
+
+    <label>Contact Number</label>
+    <input type="text" name="contactNo">
+
+    <button type="submit">Add Guest</button>
+  </form>
+</div>
 
 <div>
   <p>Search for Guest with Guest ID</p>
