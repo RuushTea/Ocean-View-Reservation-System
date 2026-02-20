@@ -6,18 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocean View Resort System</title>
 
-  <!-- Tailwind CDN  -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<%-- Tailwind  --%>
+  <link rel="stylesheet" href="css/tailwindcssOutput.css">
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
-<header class="border-b bg-white">
+<header class="border-b border-slate-200 bg-white shadow-sm">
   <div class="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold">
-        OV
-      </div>
       <div>
         <h1 class="text-lg font-semibold leading-tight">Ocean View Resort</h1>
         <p class="text-sm text-slate-500">Reservation Management System</p>
@@ -25,7 +22,7 @@
     </div>
 
     <nav class="flex items-center gap-2">
-      <a class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+      <a class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 shadow-sm"
          href="<%= request.getContextPath() %>/auth">
         Login
       </a>
@@ -34,7 +31,7 @@
 </header>
 
 <main class="mx-auto max-w-6xl px-4 py-8">
-  <section class="rounded-2xl bg-white border p-6 md:p-8">
+  <section class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 md:p-8">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
       <div>
         <h2 class="text-2xl md:text-3xl font-bold">Welcome</h2>
@@ -47,28 +44,26 @@
              href="<%= request.getContextPath() %>/reservation">
             Create Reservation
           </a>
-          <a class="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          <a class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 shadow-sm"
              href="<%= request.getContextPath() %>/auth">
             Go to Login
           </a>
         </div>
       </div>
 
-      <div class="w-full md:w-80 rounded-xl bg-slate-50 border p-4">
+      <div class="w-full md:w-80 rounded-xl bg-slate-50 border border-slate-200 shadow-sm p-4">
         <p class="text-xs font-semibold text-slate-500 uppercase">System Tips</p>
         <ul class="mt-2 space-y-2 text-sm text-slate-700 list-disc pl-5">
-          <li>Guests can be registered before creating reservations.</li>
+          <li>Guests can self-serve and do reservations themselves.</li>
           <li>Room availability is checked when reservation is submitted.</li>
-          <li>Use search to verify guest records quickly.</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- Cards -->
+<%-- Cards --%>
   <section class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Add Guest -->
-    <div class="rounded-2xl bg-white border p-6">
+    <div class="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
       <div class="flex items-start justify-between gap-4">
         <div>
           <h3 class="text-lg font-semibold">Add Guest</h3>
@@ -116,8 +111,8 @@
       </form>
     </div>
 
-    <!-- Search Guest -->
-    <div class="rounded-2xl bg-white border p-6">
+<%--  Search Guests  --%>
+    <div class="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
       <div class="flex items-start justify-between gap-4">
         <div>
           <h3 class="text-lg font-semibold">Search Guest</h3>
@@ -143,20 +138,18 @@
             Search
           </button>
 
-          <a class="text-sm font-semibold text-slate-700 hover:text-slate-900"
+          <a class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 shadow-sm"
              href="<%= request.getContextPath() %>/auth">
             Go to login →
           </a>
         </div>
 
         <p class="text-xs text-slate-500">
-          Tip: If you want search by contact number later, you can add another GET parameter and DAO method.
         </p>
       </form>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="mt-10 text-center text-xs text-slate-500">
     <%= java.time.Year.now() %> Ocean View Resort | Java EE 8 | Tomcat 9
   </footer>

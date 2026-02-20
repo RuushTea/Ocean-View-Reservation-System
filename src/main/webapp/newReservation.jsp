@@ -15,7 +15,7 @@
 <html>
 <head>
     <title>New Reservation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/tailwindcssOutput.css">
 </head>
 <body class="bg-slate-50 text-slate-800">
 <div class="max-w-3xl mx-auto p-6">
@@ -96,6 +96,11 @@
                     class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700">
                 Create Reservation
             </button>
+            <button type="reset" class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-red-600 text-white font-semibold hover:bg-blue-700">Reset Fields</button>
+            <a href="<%= request.getContextPath() %>/index.jsp"
+                    class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-slate-800 text-white font-semibold hover:bg-slate-900 float-right">
+                Go Back
+            </a>
         </form>
     </div>
 </div>

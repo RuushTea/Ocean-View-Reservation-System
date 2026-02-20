@@ -27,7 +27,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Reservation Created</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/tailwindcssOutput.css">
 </head>
 <body class="bg-slate-50 text-slate-800">
 <div class="max-w-4xl mx-auto p-6">
