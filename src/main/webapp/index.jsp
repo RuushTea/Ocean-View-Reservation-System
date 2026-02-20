@@ -9,7 +9,7 @@
 <br/>
 <a href="hello-servlet">Click here to go to HelloServlet</a>
 <a href="auth">Click here to login</a>
-<br>
+<br/>
 
 <div>
   <form action="guest-servlet" method="POST">
@@ -26,6 +26,8 @@
   </form>
 </div>
 
+<br/>
+
 <div>
   <p>Search for Guest with Guest ID</p>
   <form action="${pageContext.request.contextPath}/guest-servlet" method="GET">
@@ -33,5 +35,28 @@
     <input type="submit" value="Search">
   </form>
 </div>
+
+<br/>
+
+<div>
+  <h2>Create a new reservation</h2>
+  <form action="${pageContext.request.contextPath}reservation">
+    <label>Guest Contact No</label>
+    <input type="text" name="guestContactNo">
+
+    <label>Room Type</label>
+    <select name="roomType"></select>
+
+    <label>Check-in Date</label>
+    <input type="date" name="checkinDate">
+
+    <label>Check-out Date</label>
+    <input type="date" name="checkoutDate">
+
+    <button type="submit">Create Reservation</button>
+  </form>
+</div>
+
+
 </body>
 </html>
