@@ -4,7 +4,6 @@
   User: Rushd
   Date: 20/02/2026
   Time: 8:10 AM
-  To change this template use File | Settings | File Templates.
 --%>
 
 <%
@@ -15,7 +14,7 @@
 <html>
 <head>
     <title>New Reservation</title>
-    <link rel="stylesheet" href="css/tailwindcssOutput.css">
+    <link rel="stylesheet" href="../css/tailwindcssOutput.css">
 </head>
 <body class="bg-slate-50 text-slate-800">
 <div class="max-w-3xl mx-auto p-6">
@@ -96,7 +95,7 @@
                     class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700">
                 Create Reservation
             </button>
-            <button type="reset" class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-red-600 text-white font-semibold hover:bg-blue-700">Reset Fields</button>
+            <button type="reset" class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700">Reset Fields</button>
             <a href="<%= request.getContextPath() %>/index.jsp"
                     class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-slate-800 text-white font-semibold hover:bg-slate-900 float-right">
                 Go Back

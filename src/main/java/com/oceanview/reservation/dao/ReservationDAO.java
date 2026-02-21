@@ -36,6 +36,25 @@ public class ReservationDAO {
         }
     }
 
+    public void updateReservation(Reservation reservation){
+        String sql = "UPDATE reservation SET guestId = ?, roomId = ?, checkInDate = ?, checkOutDate = ?, status = ? WHERE reservationId = ?";
+
+    }
+
+    public void updateStatus(int reservationid, String status){
+        String sql = "UPDATE reservation SET status = ? WHERE reservationId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setString(1, status);
+            ps.setInt(2, reservationid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Failed to update reservation status: " + e.getMessage());
+        }
+    }
+
 
     public int insertAndReturnReservationId(Reservation reservation) {
         String sql = "INSERT INTO reservation (guestId, roomId, checkInDate, checkOutDate, status) VALUES (?, ?, ?, ?, ?)";
@@ -60,7 +79,7 @@ public class ReservationDAO {
     }
 
 
-
+    //Find reservation by reservation ID
     public Reservation findByReservationNo(int reservationId) {
         String sql = "SELECT res.reservationId, res.checkInDate, res.checkOutDate, res.status, " +
                 "g.guestId, g.name, g.address, g.contactNo, " +

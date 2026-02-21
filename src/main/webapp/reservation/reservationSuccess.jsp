@@ -3,7 +3,6 @@
   User: Rushd
   Date: 20/02/2026
   Time: 8:10 AM
-  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.oceanview.reservation.model.Reservation" %>
@@ -27,7 +26,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Reservation Created</title>
-    <link rel="stylesheet" href="css/tailwindcssOutput.css">
+    <link rel="stylesheet" href="../css/tailwindcssOutput.css">
 </head>
 <body class="bg-slate-50 text-slate-800">
 <div class="max-w-4xl mx-auto p-6">
