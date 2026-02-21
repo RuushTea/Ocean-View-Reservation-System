@@ -84,4 +84,29 @@ public class GuestDAO {
         }
         return null;
     }
+
+    public Guest findByReservationNoAndContactNo(int reservationNo, String contactNo) throws SQLException{
+        String sql = "SELECT g.* FROM reservation r JOIN guest g ON r.guestId = g.guestId WHERE r.reservationNo = ? AND g.contactNo = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, reservationNo);
+            ps.setString(2, contactNo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Guest g = new Guest();
+                    g.setGuestId(rs.getInt("guestId"));
+                    g.setName(rs.getString("name"));
+                    g.setAddress(rs.getString("address"));
+                    g.setContactNo(rs.getString("contactNo"));
+                    return g;
+                }
+            }
+        } catch (Exception e){
+            System.out.println("Failed to find guest by reservation ID and contact number: " + e.getMessage());
+        }
+        return null;
+    }
 }
