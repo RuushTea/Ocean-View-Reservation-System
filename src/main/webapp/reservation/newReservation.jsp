@@ -14,7 +14,7 @@
 <html>
 <head>
     <title>New Reservation</title>
-    <link rel="stylesheet" href="../css/tailwindcssOutput.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/tailwindcssOutput.css">
 </head>
 <body class="bg-slate-50 text-slate-800">
 <div class="max-w-3xl mx-auto p-6">
@@ -96,7 +96,18 @@
                 Create Reservation
             </button>
             <button type="reset" class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700">Reset Fields</button>
-            <a href="<%= request.getContextPath() %>/index.jsp"
+
+            <%
+                String role = (String) session.getAttribute("role");
+                String homeUrl = request.getContextPath() + "/index.jsp";
+                if ("ADMIN".equals(role)){
+                    homeUrl = request.getContextPath() + "/admin/home";
+                } else if("STAFF".equals(role)){
+                    homeUrl = request.getContextPath() + "/staff/home";
+                }
+            %>
+
+            <a href="<%= homeUrl %>"
                     class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-slate-800 text-white font-semibold hover:bg-slate-900 float-right">
                 Go Back
             </a>

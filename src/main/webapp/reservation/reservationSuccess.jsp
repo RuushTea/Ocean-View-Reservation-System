@@ -26,7 +26,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Reservation Created</title>
-    <link rel="stylesheet" href="../css/tailwindcssOutput.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/tailwindcssOutput.css">
 </head>
 <body class="bg-slate-50 text-slate-800">
 <div class="max-w-4xl mx-auto p-6">
@@ -84,8 +84,19 @@
                href="<%= request.getContextPath() %>/reservation">
                 Create Another Reservation
             </a>
+
+            <%
+                String role = (String) session.getAttribute("role");
+                String homeUrl = request.getContextPath() + "/index.jsp";
+                if ("ADMIN".equals(role)){
+                    homeUrl = request.getContextPath() + "/admin/home";
+                } else if("STAFF".equals(role)){
+                    homeUrl = request.getContextPath() + "/staff/home";
+                }
+            %>
+
             <a class="inline-flex justify-center items-center px-4 py-2 rounded-lg bg-slate-800 text-white font-semibold hover:bg-slate-900"
-               href="<%= request.getContextPath() %>/index.jsp">
+               href="<%= homeUrl%>">
                 Back to Home
             </a>
         </div>
