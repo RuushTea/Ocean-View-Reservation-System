@@ -35,7 +35,7 @@ public class ReservationServlet extends HttpServlet {
             if (res == null){
                 request.setAttribute("error", "Reservation was not found");
                 try {
-                    request.getRequestDispatcher("/searchReservation.jsp").forward(request, response);
+                    request.getRequestDispatcher("/reservation/searchReservation.jsp").forward(request, response);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -44,7 +44,7 @@ public class ReservationServlet extends HttpServlet {
 
             request.setAttribute("reservation", res);
             try {
-                request.getRequestDispatcher("/reservationDetails.jsp").forward(request, response);
+                request.getRequestDispatcher("/reservation/reservationDetails.jsp").forward(request, response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -60,7 +60,7 @@ public class ReservationServlet extends HttpServlet {
         }
 
         try {
-            request.getRequestDispatcher("/newReservation.jsp").forward(request, response);
+            request.getRequestDispatcher("/reservation/newReservation.jsp").forward(request, response);
         } catch (Exception e){
             System.out.println("Failed to forward to new reservation page: " + e.getMessage());
         }
@@ -77,7 +77,7 @@ public class ReservationServlet extends HttpServlet {
             reservationService.cancelReservation(reservationId);
 
             try {
-                response.sendRedirect(request.getContextPath() + "/searchReservation.jsp");
+                response.sendRedirect(request.getContextPath() + "/reservation/searchReservation.jsp");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -106,7 +106,7 @@ public class ReservationServlet extends HttpServlet {
         request.setAttribute("reservation", reservation);
 
         try {
-            request.getRequestDispatcher("/reservationSuccess.jsp").forward(request, response);
+            request.getRequestDispatcher("/reservation/reservationSuccess.jsp").forward(request, response);
         } catch (Exception e){
             System.out.println("Failed to forward to reservation success page: " + e.getMessage());
         }

@@ -86,9 +86,10 @@ public class ReservationDAO {
                 "r.roomId, r.roomNumber, r.status AS roomStatus, " +
                 "rt.roomTypeId, rt.roomTypeName, rt.ratePerNight " +
                 "FROM reservation res " +
+                "JOIN guest g ON res.guestId = g.guestId " +
                 "JOIN room r ON res.roomId = r.roomId " +
                 "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
-                "WHERE res.reservationNo = ?";
+                "WHERE res.reservationId = ?";
 
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
