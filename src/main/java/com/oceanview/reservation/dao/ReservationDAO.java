@@ -147,7 +147,10 @@ public class ReservationDAO {
             ps.setInt(1, reservationId);
 
             ResultSet rs = ps.executeQuery();
-            return buildReservationFromResultSet(rs);
+            if (rs.next()) {
+                return buildReservationFromResultSet(rs);
+            }
+            return null;
         } catch (Exception e) {
             System.out.println("Failed to find reservation by reservation ID: " + e.getMessage());
         }
@@ -174,7 +177,9 @@ public class ReservationDAO {
             ps.setString(1, contactNo);
 
             ResultSet rs = ps.executeQuery();
-            reservationList.add(buildReservationFromResultSet(rs));
+            while (rs.next()) {
+                reservationList.add(buildReservationFromResultSet(rs));
+            }
             return reservationList;
 
         } catch (Exception e) {
@@ -214,8 +219,6 @@ public class ReservationDAO {
 
     //For all common reservation creations
     private Reservation buildReservationFromResultSet(ResultSet rs) throws SQLException {
-        if (!rs.next()) return null;
-
         Guest guest = new Guest();
         guest.setGuestId(rs.getInt("guestId"));
         guest.setName(rs.getString("name"));

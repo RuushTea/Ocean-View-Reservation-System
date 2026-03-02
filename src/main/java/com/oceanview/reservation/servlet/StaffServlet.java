@@ -30,7 +30,7 @@ public class StaffServlet extends HttpServlet {
 
 
     private boolean isStaff(HttpSession session) {
-        if (session.getAttribute("role") == null){
+        if (session.getAttribute("role") == null) {
             return false;
         }
         Object role = session.getAttribute("role");
@@ -39,10 +39,10 @@ public class StaffServlet extends HttpServlet {
 
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || !isStaff(session)){
+        if (session == null || !isStaff(session)) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
         }
@@ -50,12 +50,13 @@ public class StaffServlet extends HttpServlet {
         //Find which action for which code
         String action = request.getParameter("action");
 
-        if (action == null){
+        if (action == null) {
             request.getRequestDispatcher("/staff/staffHome.jsp").forward(request, response);
             return;
         }
 
-        switch (action){
+        //All get methods
+        switch (action) {
             case "searchReservation": {
                 request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
                 break;
@@ -64,7 +65,11 @@ public class StaffServlet extends HttpServlet {
                 request.getRequestDispatcher("/staff/help.jsp").forward(request, response);
                 break;
             }
-            case "edit":{
+            case "doSearch": {
+                searchWithSearchType(request, response);
+                return;
+            }
+            case "edit": {
                 int reservationId = Integer.parseInt(request.getParameter("reservationId"));
                 request.setAttribute("roomTypes", roomTypeDAO.findAll());
                 request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationId));
@@ -81,13 +86,13 @@ public class StaffServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
 
 
-        if (!isStaff(session)){
+        if (!isStaff(session)) {
             response.sendRedirect(request.getContextPath() + "/auth");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null){
+        if (action == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
 
@@ -95,14 +100,14 @@ public class StaffServlet extends HttpServlet {
         int reservationNo;
         String id = request.getParameter("reservationNo");
 
-        switch (action){
+        switch (action) {
             //Search reservation
             case "doSearch": {
                 searchWithSearchType(request, response);
                 return;
             }
             //Cancel reservation
-            case "cancelReservation":{
+            case "cancelReservation": {
 
                 try {
                     reservationNo = Integer.parseInt(id);
@@ -118,7 +123,7 @@ public class StaffServlet extends HttpServlet {
                     request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                     return;
                 }
-                
+
                 // Get updated reservation and stay on same page
                 Reservation updatedReservation = reservationService.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
@@ -126,16 +131,16 @@ public class StaffServlet extends HttpServlet {
                 break;
             }
             //Generate bill
-            case "generateBill":{
+            case "generateBill": {
                 try {
                     reservationNo = Integer.parseInt(id);
-                } catch (Exception e){
+                } catch (Exception e) {
                     response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
                     return;
                 }
 
                 Bill bill = billService.generateBill(reservationNo);
-                if (bill == null){
+                if (bill == null) {
                     request.setAttribute("error", "Unable to generate bill for No: " + reservationNo);
                     request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request, response);
                     return;
@@ -147,10 +152,10 @@ public class StaffServlet extends HttpServlet {
                 request.getRequestDispatcher("/staff/staffGenerateBill.jsp").forward(request, response);
             }
             //Toggle to either cancel or reinstate reservation
-            case "toggleCancel":{
+            case "toggleCancel": {
                 try {
                     reservationNo = Integer.parseInt(request.getParameter("reservationId"));
-                } catch (Exception e){
+                } catch (Exception e) {
                     response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
                     return;
                 }
@@ -159,7 +164,7 @@ public class StaffServlet extends HttpServlet {
                 if (!success) {
                     request.setAttribute("error", "Unable to change reservation status for no:" + reservationNo);
                     request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
-                    request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request,response);
+                    request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                     return;
                 }
 
@@ -170,7 +175,7 @@ public class StaffServlet extends HttpServlet {
                 break;
             }
             //Update reservation
-            case "update":{
+            case "update": {
                 reservationNo = Integer.parseInt(request.getParameter("reservationId"));
 
                 String name = request.getParameter("name");
@@ -186,7 +191,7 @@ public class StaffServlet extends HttpServlet {
                         reservationNo, name, address, contactNo, roomTypeId, checkInDate, checkOutDate
                 );
 
-                if (updatedRes == null){
+                if (updatedRes == null) {
                     request.setAttribute("error", "Update failed: No rooms available or data is invalid");
                     request.setAttribute("roomTypes", roomTypeDAO.findAll());
                     request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
@@ -243,7 +248,7 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                // Display reservation details in detail view or list view based on view mode
+                // Display reservation details in detail view or list view
                 String viewMode = req.getParameter("view");
                 if ("detail".equals(viewMode)) {
                     List<Reservation> singleReservationList = new ArrayList<>();
@@ -282,7 +287,7 @@ public class StaffServlet extends HttpServlet {
             return;
         }
 
-        // fallback if searchType is invalid
+        // if searchType is invalid
         req.setAttribute("error", "Invalid search type.");
         req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
     }
