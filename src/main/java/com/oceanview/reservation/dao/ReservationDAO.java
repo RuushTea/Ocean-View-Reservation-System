@@ -146,39 +146,36 @@ public class ReservationDAO {
 
             ps.setInt(1, reservationId);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return null;
-
-                Guest guest = new Guest();
-                guest.setGuestId(rs.getInt("guestId"));
-                guest.setName(rs.getString("name"));
-                guest.setAddress(rs.getString("address"));
-                guest.setContactNo(rs.getString("contactNo"));
-
-                RoomType rt = new RoomType(
-                        rs.getInt("roomTypeId"),
-                        rs.getString("roomTypeName"),
-                        rs.getDouble("ratePerNight")
-                );
-
-                Room room = new Room(
-                        rs.getInt("roomId"),
-                        rs.getInt("roomNumber"),
-                        rs.getString("roomStatus"),
-                        rt
-                );
-
-                return new Reservation(
-                        rs.getInt("reservationId"),
-                        guest,
-                        room,
-                        rs.getDate("checkInDate"),
-                        rs.getDate("checkOutDate"),
-                        rs.getString("status")
-                );
-            }
+            ResultSet rs = ps.executeQuery();
+            return buildReservationFromResultSet(rs);
         } catch (Exception e) {
             System.out.println("Failed to find reservation by reservation ID: " + e.getMessage());
+        }
+        return null;
+    }
+
+    //Find reservation by guest contactNo
+    public Reservation findByContactNo(String contactNo) {
+        String sql = "SELECT res.reservationId, res.checkInDate, res.checkOutDate, res.status, " +
+                "g.guestId, g.name, g.address, g.contactNo, " +
+                "r.roomId, r.roomNumber, r.status AS roomStatus, " +
+                "rt.roomTypeId, rt.roomTypeName, rt.ratePerNight " +
+                "FROM reservation res " +
+                "JOIN guest g ON res.guestId = g.guestId " +
+                "JOIN room r ON res.roomId = r.roomId " +
+                "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
+                "WHERE g.contactNo = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, contactNo);
+
+            ResultSet rs = ps.executeQuery();
+            return buildReservationFromResultSet(rs);
+
+        } catch (Exception e) {
+            System.out.println("Failed to find reservation by guest contactNo: " + e.getMessage());
         }
         return null;
     }
@@ -202,38 +199,48 @@ public class ReservationDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 List<Reservation> reservationList = new ArrayList<>();
                 while (rs.next()) {
-                    Guest guest = new Guest();
-                    guest.setGuestId(rs.getInt("guestId"));
-                    guest.setName(rs.getString("name"));
-                    guest.setAddress(rs.getString("address"));
-                    guest.setContactNo(rs.getString("contactNo"));
-
-                    RoomType rt = new RoomType(
-                            rs.getInt("roomTypeId"),
-                            rs.getString("roomTypeName"),
-                            rs.getDouble("ratePerNight")
-                    );
-
-                    Room room = new Room(
-                            rs.getInt("roomId"),
-                            rs.getInt("roomNumber"),
-                            rs.getString("roomStatus"),
-                            rt
-                    );
-
-                    reservationList.add(new Reservation(
-                            rs.getInt("reservationId"),
-                            guest,
-                            room,
-                            rs.getDate("checkInDate"),
-                            rs.getDate("checkOutDate"),
-                            rs.getString("status")
-                    ));
+                    reservationList.add(buildReservationFromResultSet(rs));
                 }
+                return reservationList;
             }
         } catch (Exception e) {
             System.out.println("Failed to find reservations by guest ID: " + e.getMessage());
         }
         return Collections.emptyList();
     }
+
+    //For all common reservation creations
+    private Reservation buildReservationFromResultSet(ResultSet rs) throws SQLException {
+        if (!rs.next()) return null;
+
+        Guest guest = new Guest();
+        guest.setGuestId(rs.getInt("guestId"));
+        guest.setName(rs.getString("name"));
+        guest.setAddress(rs.getString("address"));
+        guest.setContactNo(rs.getString("contactNo"));
+
+        RoomType rt = new RoomType(
+                rs.getInt("roomTypeId"),
+                rs.getString("roomTypeName"),
+                rs.getDouble("ratePerNight")
+        );
+
+        Room room = new Room(
+                rs.getInt("roomId"),
+                rs.getInt("roomNumber"),
+                rs.getString("roomStatus"),
+                rt
+        );
+
+        return new Reservation(
+                rs.getInt("reservationId"),
+                guest,
+                room,
+                rs.getDate("checkInDate"),
+                rs.getDate("checkOutDate"),
+                rs.getString("status")
+        );
+    }
 }
+
+
