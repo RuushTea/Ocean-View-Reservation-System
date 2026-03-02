@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "StaffServlet", value = "/staff/home")
@@ -113,10 +114,15 @@ public class StaffServlet extends HttpServlet {
                 boolean success = reservationService.cancelReservation(reservationNo);
                 if (!success) {
                     request.setAttribute("error", "Failed to cancel reservation for No: " + reservationNo);
-                    request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request, response);
+                    request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
+                    request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                     return;
                 }
-                response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
+                
+                // Get updated reservation and stay on same page
+                Reservation updatedReservation = reservationService.searchReservation(reservationNo);
+                request.setAttribute("reservation", updatedReservation);
+                request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                 break;
             }
             //Generate bill
@@ -152,14 +158,15 @@ public class StaffServlet extends HttpServlet {
                 boolean success = reservationService.toggleCancel(reservationNo);
                 if (!success) {
                     request.setAttribute("error", "Unable to change reservation status for no:" + reservationNo);
-                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
+                    request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
+                    request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request,response);
                     return;
                 }
 
                 // Get the updated reservation to display
                 Reservation updatedReservation = reservationService.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
-                request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
+                request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                 break;
             }
             //Update reservation
@@ -189,7 +196,7 @@ public class StaffServlet extends HttpServlet {
 
                 Reservation updatedReservation = reservationService.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
-                request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
+                request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                 break;
             }
             default:
@@ -200,8 +207,10 @@ public class StaffServlet extends HttpServlet {
     private void searchWithSearchType(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String searchType = req.getParameter("searchType");   // "reservationNo" or "contactNo"
-        String searchValue = req.getParameter("searchValue"); // typed value
+        // reservationNo or contactNo
+        String searchType = req.getParameter("searchType");
+        //Typed search value
+        String searchValue = req.getParameter("searchValue");
 
         if (searchType == null || searchType.trim().isEmpty()) {
             searchType = "reservationNo"; // default
@@ -234,8 +243,19 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
+                // Display reservation details in detail view or list view based on view mode
+                String viewMode = req.getParameter("view");
+                if ("detail".equals(viewMode)) {
+                    List<Reservation> singleReservationList = new ArrayList<>();
+                    singleReservationList.add(reservation);
+                    req.setAttribute("reservations", singleReservationList);
+                } else {
+                    req.setAttribute("reservations", reservationService.searchByGuestContactNo(reservation.getGuest().getContactNo()));
+                }
+
                 req.setAttribute("reservation", reservation);
-                req.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(req, resp);
+                req.setAttribute("searchValue", String.valueOf(reservationNo));
+                req.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(req, resp);
                 return;
 
             } catch (NumberFormatException e) {
@@ -257,7 +277,8 @@ public class StaffServlet extends HttpServlet {
             }
 
             req.setAttribute("reservations", list);
-            req.getRequestDispatcher("/staff/staffReservationSearchList.jsp").forward(req, resp);
+            req.setAttribute("searchValue", searchValue);
+            req.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(req, resp);
             return;
         }
 
