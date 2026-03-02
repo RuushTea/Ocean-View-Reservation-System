@@ -18,10 +18,11 @@
 <p>Welcome, <%= admin != null ? admin.getFullName() : "Admin" %></p>
 
 <ul>
-    <li><a href="<%= request.getContextPath() %>/reservation">Create Reservation</a></li>
+    <li><a href="#">Create Reservation</a></li>
     <li><a href="#">Manage Staff</a></li>
     <li><a href="#">Deactivate Accounts</a></li>
     <li><a href="#">Help Articles</a></li>
+
 </ul>
 
 <a href="<%= request.getContextPath() %>/logout">Logout</a>
