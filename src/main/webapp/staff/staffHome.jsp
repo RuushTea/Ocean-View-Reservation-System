@@ -19,8 +19,9 @@
 
 <ul>
     <li><a href="<%= request.getContextPath() %>/reservation">Create Reservation</a></li>
-    <li><a href="#">Search Reservation</a></li>
-    <li><a href="#">Calculate Bill</a></li>
+    <li><a href="<%= request.getContextPath() %>/staff/reservation/search">Search Reservation</a></li>
+    <li><a href="<%= request.getContextPath() %>/staff/reservation/cancel">Cancel Reservation</a></li>
+    <li><a href="<%= request.getContextPath() %>/staff/bill">Calculate Bill</a></li>
     <li><a href="#">Help Articles</a></li>
 </ul>
 

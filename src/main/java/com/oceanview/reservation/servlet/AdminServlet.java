@@ -20,6 +20,6 @@ public class AdminServlet extends HttpServlet {
             return;
         }
 
-        request.getRequestDispatcher("/adminHome.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/adminHome.jsp").forward(request, response);
     }
 }

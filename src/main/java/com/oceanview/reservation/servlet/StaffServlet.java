@@ -20,6 +20,6 @@ public class StaffServlet extends HttpServlet {
             return;
         }
 
-        request.getRequestDispatcher("/staffHome.jsp").forward(request, response);
+        request.getRequestDispatcher("/staff/staffHome.jsp").forward(request, response);
     }
 }
