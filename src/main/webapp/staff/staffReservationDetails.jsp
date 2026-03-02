@@ -96,6 +96,11 @@
                     <% } %>
             </form>
 
+
+            <a href="<%= request.getContextPath() %>/staff/home?action=edit&reservationId=<%= r.getReservationId() %>" class="rounded-lg border border-slate-300 px-4 py-2 font-semibold hover:bg-slate-100">
+                Edit Reservation
+            </a>
+
             <%--Print bill--%>
             <form method="post" action="<%= request.getContextPath() %>/staff/home" class="w-full sm:w-auto">
                 <input type="hidden" name="action" value="generateBill"/>

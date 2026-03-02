@@ -1,5 +1,7 @@
 package com.oceanview.reservation.servlet;
 
+import com.oceanview.reservation.dao.ReservationDAO;
+import com.oceanview.reservation.dao.RoomTypeDAO;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.service.ReservationService;
@@ -12,11 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
 
 @WebServlet(name = "StaffServlet", value = "/staff/home")
 public class StaffServlet extends HttpServlet {
 
     private final ReservationService reservationService = new ReservationServiceImpl();
+    private final ReservationDAO reservationDAO = new ReservationDAO();
+    private final RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+
 
     private boolean isStaff(HttpSession session) {
         if (session.getAttribute("role") == null){
@@ -45,12 +51,21 @@ public class StaffServlet extends HttpServlet {
         }
 
         switch (action){
-            case "searchReservation":
+            case "searchReservation": {
                 request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
                 break;
-            case "help":
+            }
+            case "help": {
                 request.getRequestDispatcher("/staff/help.jsp").forward(request, response);
                 break;
+            }
+            case "edit":{
+                int reservationId = Integer.parseInt(request.getParameter("reservationId"));
+                request.setAttribute("roomTypes", roomTypeDAO.findAll());
+                request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationId));
+                request.getRequestDispatcher("/staff/editReservation.jsp").forward(request, response);
+                return;
+            }
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -159,10 +174,38 @@ public class StaffServlet extends HttpServlet {
                 Reservation updatedReservation = reservationService.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
                 request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
-//                response.sendRedirect(request.getContextPath() + "/staff/staffReservationDetails.jsp");
                 break;
             }
+            //Update reservation
+            case "update":{
+                reservationNo = Integer.parseInt(request.getParameter("reservationId"));
 
+                String name = request.getParameter("name");
+                String address = request.getParameter("address");
+                String contactNo = request.getParameter("contactNo");
+
+                int roomTypeId = Integer.parseInt(request.getParameter("roomTypeId"));
+                Date checkInDate = Date.valueOf(request.getParameter("checkInDate"));
+                Date checkOutDate = Date.valueOf(request.getParameter("checkOutDate"));
+
+                //Input values
+                Reservation updatedRes = reservationService.updateReservation(
+                        reservationNo, name, address, contactNo, roomTypeId, checkInDate, checkOutDate
+                );
+
+                if (updatedRes == null){
+                    request.setAttribute("error", "Update failed: No rooms available or data is invalid");
+                    request.setAttribute("roomTypes", roomTypeDAO.findAll());
+                    request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
+                    request.getRequestDispatcher("/staff/editReservation.jsp").forward(request, response);
+                    return;
+                }
+
+                Reservation updatedReservation = reservationService.searchReservation(reservationNo);
+                request.setAttribute("reservation", updatedReservation);
+                request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
+                break;
+            }
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }

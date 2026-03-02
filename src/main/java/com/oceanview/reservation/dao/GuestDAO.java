@@ -38,6 +38,23 @@ public class GuestDAO {
         }
     }
 
+    public boolean updateGuest(Guest guest) throws SQLException{
+        String sql = "UPDATE guest SET name = ?, address = ?, contactNo = ? WHERE guestId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)){
+            ps.setString(1, guest.getName());
+            ps.setString(2, guest.getAddress());
+            ps.setString(3, guest.getContactNo());
+            ps.setInt(4, guest.getGuestId());
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e){
+            System.out.println("Failed to get guest by guest ID: " + e.getMessage());
+            return false;
+        }
+    }
+
     public int insertGuestAndReturnId(Guest guest) throws SQLException{
         String sql = "INSERT INTO guest (name, address, contactNo) VALUES (?, ?, ?)";
 

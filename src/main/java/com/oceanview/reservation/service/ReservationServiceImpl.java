@@ -55,6 +55,64 @@ public class ReservationServiceImpl implements ReservationService{
         return reservation;
     }
 
+    //Update Reservation
+    @Override
+    public Reservation updateReservation(int reservationId, String guestName, String address, String contactNo, int roomtypeId, Date checkInDate, Date checkOutDate) {
+
+        if (checkInDate == null || checkOutDate == null || !checkInDate.before(checkOutDate)) {
+            System.out.println("Invalid update dates");
+            return null;
+        }
+
+        Reservation existing = reservationDAO.findByReservationNo(reservationId);
+        if (existing == null){
+            System.out.println("Reservation not found for update");
+            return null;
+        }
+
+        // Update guest information
+        Guest g = existing.getGuest();
+        g.setName(guestName);
+        g.setAddress(address);
+        g.setContactNo(contactNo);
+
+        try {
+            boolean guestUpdated = guestDAO.updateGuest(g);
+        } catch (SQLException e) {
+            System.out.println("Guest update failed");
+            return null;
+        }
+
+
+        // Check for room re-allocation
+        boolean roomTypeChanged = existing.getRoom().getRoomType().getRoomTypeId() != roomtypeId;
+        boolean datesChanged = !existing.getCheckInDate().equals(checkInDate) || !existing.getCheckOutDate().equals(checkOutDate);
+
+        if (roomTypeChanged || datesChanged){
+            Room newRoom = roomDAO.findAvailableRoomForUpdate(roomtypeId, checkInDate, checkOutDate, reservationId);
+
+            if (newRoom == null){
+                System.out.println("No available room for updated dates or type");
+                return null;
+            }
+
+            //update room id in reservation
+            boolean roomUpdated = reservationDAO.updateRoom(reservationId, newRoom.getRoomId());
+            if (!roomUpdated){return null;}
+
+            existing.setRoom(newRoom);
+        }
+
+        //Update dates
+        boolean datesUpdated = reservationDAO.updateReservationDates(reservationId, checkInDate, checkOutDate);
+        if (!datesUpdated) {return null;}
+
+        existing.setCheckInDate(checkInDate);
+        existing.setCheckOutDate(checkOutDate);
+
+        return existing;
+    }
+
     @Override
     public Reservation searchReservation(int reservationId) {
         return reservationDAO.findByReservationNo(reservationId);

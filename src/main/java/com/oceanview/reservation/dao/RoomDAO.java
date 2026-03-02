@@ -4,10 +4,7 @@ import com.oceanview.reservation.model.Room;
 import com.oceanview.reservation.model.RoomType;
 import com.oceanview.reservation.util.DBConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Date;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,5 +114,48 @@ public class RoomDAO {
         return null;
     }
 
+    public Room findAvailableRoomForUpdate(int roomTypeId, Date checkinDate, Date checkOutDate, int excludeReservationId){
 
+        String sql = "SELECT r.roomId, r.roomNumber, r.status, rt.roomTypeId, rt.roomTypeName, rt.ratePerNight " +
+                "FROM room r " +
+                "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
+                "WHERE rt.roomTypeId = ? " +
+                "AND r.status = 'AVAILABLE' " +
+                "AND r.roomId NOT IN ( " +
+                "   SELECT res.roomId FROM reservation res " +
+                "   WHERE res.status = 'CONFIRMED' " +
+                "   AND res.reservationId <> ? " +
+                "   AND (? < res.checkOutDate AND ? > res.checkInDate) " +
+                ") " +
+                "LIMIT 1";
+
+        try (Connection con = DBConnectionManager.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setInt(1, roomTypeId);
+            ps.setInt(2, excludeReservationId);
+            ps.setDate(3, checkinDate);
+            ps.setDate(4, checkOutDate);
+
+            try (ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    RoomType rt = new RoomType(
+                            rs.getInt("roomTypeId"),
+                            rs.getString("roomTypeName"),
+                            rs.getDouble("ratePerNight")
+                    );
+                    return new Room(
+                            rs.getInt("roomId"),
+                            rs.getInt("roomNumber"),
+                            rs.getString("status"),
+                            rt
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Failed to find available room for update: " + e.getMessage());
+        }
+        return null;
+    }
 }

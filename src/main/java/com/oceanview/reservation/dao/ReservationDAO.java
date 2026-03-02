@@ -24,7 +24,7 @@ public class ReservationDAO {
     }
 
 
-    public void insert(Reservation reservation) {
+    public void insertReservation(Reservation reservation) {
         String sql = "INSERT INTO reservation (guestId, roomId, checkInDate, checkOutDate, status) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection con = DBConnectionManager.getConnection();
@@ -36,11 +36,39 @@ public class ReservationDAO {
         }
     }
 
-    public void updateReservation(Reservation reservation){
-        String sql = "UPDATE reservation SET guestId = ?, roomId = ?, checkInDate = ?, checkOutDate = ?, status = ? WHERE reservationId = ?";
+    public boolean updateReservationDates(int reservationId, Date checkIn, Date checkOut) {
+        String sql = "UPDATE reservation SET checkInDate = ?, checkOutDate = ? WHERE reservationId = ?";
 
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setDate(1, checkIn);
+            ps.setDate(2, checkOut);
+            ps.setInt(3, reservationId);
+
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            System.out.println("Failed to update reservation dates: " + e.getMessage());
+            return false;
+        }
     }
 
+    public boolean updateRoom(int reservationNo, int roomId){
+        String sql = "UPDATE reservation SET roomId = ? WHERE reservationId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setInt(1, roomId);
+            ps.setInt(2, reservationNo);
+
+            return ps.executeUpdate() == 1;
+
+        } catch (Exception e) {
+            System.out.println("Failed to update reservation room: " + e.getMessage());
+            return false;
+        }
+    }
     public boolean updateStatus(int reservationid, String status){
         String sql = "UPDATE reservation SET status = ? WHERE reservationId = ?";
 
