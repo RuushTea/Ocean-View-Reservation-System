@@ -1,10 +1,10 @@
 package com.oceanview.reservation.model;
 
 public class Bill {
-    private int reservationNo;
-    private int nights;
-    private double ratePerNight;
-    private double totalAmount;
+    private final int reservationNo;
+    private final int nights;
+    private final double ratePerNight;
+    private final double totalAmount;
 
     public Bill(int reservationNo, int nights, double ratePerNight) {
         this.reservationNo = reservationNo;

@@ -38,7 +38,7 @@ public class GuestDAO {
         }
     }
 
-    public boolean updateGuest(Guest guest) throws SQLException{
+    public boolean updateGuest(Guest guest){
         String sql = "UPDATE guest SET name = ?, address = ?, contactNo = ? WHERE guestId = ?";
 
         try (Connection con = DBConnectionManager.getConnection();
@@ -102,7 +102,7 @@ public class GuestDAO {
         return null;
     }
 
-    public Guest findByReservationNoAndContactNo(int reservationNo, String contactNo) throws SQLException{
+    public Guest findByReservationNoAndContactNo(int reservationNo, String contactNo){
         String sql = "SELECT g.* FROM reservation r JOIN guest g ON r.guestId = g.guestId WHERE r.reservationNo = ? AND g.contactNo = ?";
 
         try (Connection con = DBConnectionManager.getConnection();
