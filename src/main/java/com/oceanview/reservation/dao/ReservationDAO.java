@@ -58,6 +58,25 @@ public class ReservationDAO {
         }
     }
 
+    //return status by reservation ID
+    public String getStatus(int reservationId) {
+        String sql = "SELECT status FROM reservation WHERE reservationId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, reservationId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getString("status");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Failed to get reservation status: " + e.getMessage());
+        }
+        return null;
+    }
+
 
     public int insertAndReturnReservationId(Reservation reservation) {
         String sql = "INSERT INTO reservation (guestId, roomId, checkInDate, checkOutDate, status) VALUES (?, ?, ?, ?, ?)";

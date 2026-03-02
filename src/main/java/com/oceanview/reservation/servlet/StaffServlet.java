@@ -1,5 +1,6 @@
 package com.oceanview.reservation.servlet;
 
+import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.service.ReservationService;
 import com.oceanview.reservation.service.ReservationServiceImpl;
@@ -76,29 +77,50 @@ public class StaffServlet extends HttpServlet {
 
         switch (action){
             //Search reservation
-            case "doSearch":
+            case "doSearch": {
                 try {
                     reservationNo = Integer.parseInt(id);
-                    if (reservationNo < 0){throw new NumberFormatException();}
-                } catch (Exception e){
+                    if (reservationNo < 0) {
+                        throw new NumberFormatException();
+                    }
+                } catch (Exception e) {
                     request.setAttribute("error", "Enter a valid reservation number");
-                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
+                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
                     return;
                 }
 
                 Reservation reservation = reservationService.searchReservation(reservationNo);
-                if (reservation == null){
+                if (reservation == null) {
                     request.setAttribute("error", "Reservation not found for No: " + reservationNo);
-                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
+                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
                     return;
                 }
 
                 request.setAttribute("reservation", reservation);
                 request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
                 break;
+            }
+            //Cancel reservation
+            case "cancelReservation":{
 
-            case "cancelReservation":
+                try {
+                    reservationNo = Integer.parseInt(id);
+                } catch (Exception e) {
+                    response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
+                    return;
+                }
 
+                boolean success = reservationService.cancelReservation(reservationNo);
+                if (!success) {
+                    request.setAttribute("error", "Failed to cancel reservation for No: " + reservationNo);
+                    request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request, response);
+                    return;
+                }
+                response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
+                break;
+            }
+            //Generate bill
+            case "generateBill":{
                 try {
                     reservationNo = Integer.parseInt(id);
                 } catch (Exception e){
@@ -106,15 +128,17 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                boolean success = reservationService.cancelReservation(reservationNo);
-                if (!success){
-                    request.setAttribute("error", "Failed to cancel reservation for No: " + reservationNo);
-                    request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request,response);
+                Bill bill = reservationService.generateBill(reservationNo);
+
+                if (bill == null){
+                    request.setAttribute("error", "Unable to generate bill for No: " + reservationNo);
+                    request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request, response);
                     return;
                 }
-                response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
-                break;
 
+                request.setAttribute("bill", bill);
+                request.getRequestDispatcher("/staff/staffGenerateBill.jsp").forward(request, response);
+            }
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }

@@ -1,5 +1,6 @@
 package com.oceanview.reservation.service;
 
+import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
 
@@ -12,4 +13,5 @@ public interface ReservationService {
     void checkAvailability(String roomType, Date checkInDate, Date checkOutDate);
     boolean checkRoomAvailability(int roomTypeId, Date checkInDate, Date checkOutDate);
     boolean cancelReservation(int reservationId);
+    Bill generateBill(int reservationId);
 }

@@ -3,6 +3,7 @@ package com.oceanview.reservation.service;
 import com.oceanview.reservation.dao.GuestDAO;
 import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.dao.RoomDAO;
+import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.model.Room;
@@ -72,6 +73,23 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public boolean cancelReservation(int reservationId) {
         return reservationDAO.updateStatus(reservationId, "CANCELLED");
+    }
+
+    //Generate Bill for Staff
+    @Override
+    public Bill generateBill(int reservationId) {
+        Reservation reservation = reservationDAO.findByReservationNo(reservationId);
+
+        if (reservation == null){
+            return null;
+        }
+
+        long dateDifference = reservation.getCheckOutDate().getTime() - reservation.getCheckInDate().getTime();
+
+        int nights = (int) (dateDifference / (1000 * 60 * 60 * 24));
+        double ratePerNight = reservation.getRoom().getRoomType().getRatePerNight();
+
+        return new Bill(reservationId, nights, ratePerNight);
     }
 
 

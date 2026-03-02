@@ -56,7 +56,6 @@
   </section>
 
 </main>
-
 <footer class="text-center py-6 text-sm text-slate-500">
   <%= java.time.Year.now() %> Ocean View Resort | Java EE 8 | Tomcat 9
 </footer>
