@@ -4,6 +4,8 @@ import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.dao.RoomTypeDAO;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Reservation;
+import com.oceanview.reservation.service.BillService;
+import com.oceanview.reservation.service.BillServiceImpl;
 import com.oceanview.reservation.service.ReservationService;
 import com.oceanview.reservation.service.ReservationServiceImpl;
 
@@ -20,6 +22,7 @@ import java.sql.Date;
 public class StaffServlet extends HttpServlet {
 
     private final ReservationService reservationService = new ReservationServiceImpl();
+    private final BillService billService = new BillServiceImpl();
     private final ReservationDAO reservationDAO = new ReservationDAO();
     private final RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
 
@@ -143,15 +146,16 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                Bill bill = reservationService.generateBill(reservationNo);
-
+                Bill bill = billService.generateBill(reservationNo);
                 if (bill == null){
                     request.setAttribute("error", "Unable to generate bill for No: " + reservationNo);
                     request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request, response);
                     return;
+                } else {
+                    request.setAttribute("bill", bill);
                 }
 
-                request.setAttribute("bill", bill);
+                request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
                 request.getRequestDispatcher("/staff/staffGenerateBill.jsp").forward(request, response);
             }
             //Toggle to either cancel or reinstate reservation

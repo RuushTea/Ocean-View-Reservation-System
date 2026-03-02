@@ -60,8 +60,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     public Guest verifyGuestIdentity(int reservationNo, String contactNo) {
         try {
             return guestDAO.findByReservationNoAndContactNo(reservationNo, contactNo);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("No guest found for reservation No: " + reservationNo + " and contact No: " + contactNo);
+            return null;
         }
     }
 }

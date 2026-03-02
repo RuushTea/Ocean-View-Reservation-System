@@ -76,12 +76,7 @@ public class ReservationServiceImpl implements ReservationService{
         g.setAddress(address);
         g.setContactNo(contactNo);
 
-        try {
-            boolean guestUpdated = guestDAO.updateGuest(g);
-        } catch (SQLException e) {
-            System.out.println("Guest update failed");
-            return null;
-        }
+        boolean guestUpdated = guestDAO.updateGuest(g);
 
 
         // Check for room re-allocation
