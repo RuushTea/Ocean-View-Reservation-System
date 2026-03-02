@@ -10,6 +10,7 @@ import com.oceanview.reservation.model.Room;
 
 import java.sql.SQLException;
 import java.sql.Date;
+import java.util.List;
 
 public class ReservationServiceImpl implements ReservationService{
 
@@ -111,6 +112,11 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public Reservation searchReservation(int reservationId) {
         return reservationDAO.findByReservationNo(reservationId);
+    }
+
+    @Override
+    public List<Reservation> searchByGuestContactNo(String contactNo) {
+        return reservationDAO.findByContactNo(contactNo);
     }
 
     @Override

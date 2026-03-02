@@ -155,7 +155,7 @@ public class ReservationDAO {
     }
 
     //Find reservation by guest contactNo
-    public Reservation findByContactNo(String contactNo) {
+    public List<Reservation> findByContactNo(String contactNo) {
         String sql = "SELECT res.reservationId, res.checkInDate, res.checkOutDate, res.status, " +
                 "g.guestId, g.name, g.address, g.contactNo, " +
                 "r.roomId, r.roomNumber, r.status AS roomStatus, " +
@@ -166,13 +166,16 @@ public class ReservationDAO {
                 "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
                 "WHERE g.contactNo = ?";
 
+        List<Reservation> reservationList = new ArrayList<>();
+
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, contactNo);
 
             ResultSet rs = ps.executeQuery();
-            return buildReservationFromResultSet(rs);
+            reservationList.add(buildReservationFromResultSet(rs));
+            return reservationList;
 
         } catch (Exception e) {
             System.out.println("Failed to find reservation by guest contactNo: " + e.getMessage());

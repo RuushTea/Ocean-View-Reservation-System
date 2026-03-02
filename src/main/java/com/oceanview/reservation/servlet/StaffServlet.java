@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 
 @WebServlet(name = "StaffServlet", value = "/staff/home")
 public class StaffServlet extends HttpServlet {
@@ -96,27 +97,8 @@ public class StaffServlet extends HttpServlet {
         switch (action){
             //Search reservation
             case "doSearch": {
-                try {
-                    reservationNo = Integer.parseInt(id);
-                    if (reservationNo < 0) {
-                        throw new NumberFormatException();
-                    }
-                } catch (Exception e) {
-                    request.setAttribute("error", "Enter a valid reservation number");
-                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
-                    return;
-                }
-
-                Reservation reservation = reservationService.searchReservation(reservationNo);
-                if (reservation == null) {
-                    request.setAttribute("error", "Reservation not found for No: " + reservationNo);
-                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
-                    return;
-                }
-
-                request.setAttribute("reservation", reservation);
-                request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
-                break;
+                searchWithSearchType(request, response);
+                return;
             }
             //Cancel reservation
             case "cancelReservation":{
@@ -213,5 +195,74 @@ public class StaffServlet extends HttpServlet {
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
+    }
+
+    private void searchWithSearchType(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String searchType = req.getParameter("searchType");   // "reservationNo" or "contactNo"
+        String searchValue = req.getParameter("searchValue"); // typed value
+
+        if (searchType == null || searchType.trim().isEmpty()) {
+            searchType = "reservationNo"; // default
+        }
+
+        if (searchValue == null || searchValue.trim().isEmpty()) {
+            req.setAttribute("error", "Please enter a value to search.");
+            req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
+            return;
+        }
+
+        searchValue = searchValue.trim();
+
+        // Search by reservation number
+        if ("reservationNo".equalsIgnoreCase(searchType)) {
+            try {
+                int reservationNo = Integer.parseInt(searchValue);
+
+                if (reservationNo <= 0) {
+                    req.setAttribute("error", "Reservation number must be greater than 0.");
+                    req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
+                    return;
+                }
+
+                Reservation reservation = reservationService.searchReservation(reservationNo);
+
+                if (reservation == null) {
+                    req.setAttribute("error", "Reservation not found for No: " + reservationNo);
+                    req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
+                    return;
+                }
+
+                req.setAttribute("reservation", reservation);
+                req.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(req, resp);
+                return;
+
+            } catch (NumberFormatException e) {
+                req.setAttribute("error", "Reservation number must be numeric.");
+                req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
+                return;
+            }
+        }
+
+        // Search by guest contact number
+        if ("contactNo".equalsIgnoreCase(searchType)) {
+
+            List<Reservation> list = reservationService.searchByGuestContactNo(searchValue);
+
+            if (list == null || list.isEmpty()) {
+                req.setAttribute("error", "No reservations found for contact number: " + searchValue);
+                req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
+                return;
+            }
+
+            req.setAttribute("reservations", list);
+            req.getRequestDispatcher("/staff/staffReservationSearchList.jsp").forward(req, resp);
+            return;
+        }
+
+        // fallback if searchType is invalid
+        req.setAttribute("error", "Invalid search type.");
+        req.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(req, resp);
     }
 }
