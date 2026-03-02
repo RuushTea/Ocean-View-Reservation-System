@@ -1,6 +1,5 @@
 package com.oceanview.reservation.servlet;
 
-import javax.management.relation.Role;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,16 +33,16 @@ public class StaffServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null){
-            request.getRequestDispatcher(request.getContextPath() + "/staff/staffHome.jsp").forward(request, response);
+            request.getRequestDispatcher("/staff/staffHome.jsp").forward(request, response);
             return;
         }
 
         switch (action){
             case "searchReservation":
-                request.getRequestDispatcher(request.getContextPath() + "/staff/SearchReservation.jsp").forward(request, response);
+                request.getRequestDispatcher("/staff/SearchReservation.jsp").forward(request, response);
                 break;
             case "help":
-                request.getRequestDispatcher(request.getContextPath() + "/staff/help.jsp").forward(request, response);
+                request.getRequestDispatcher("/staff/help.jsp").forward(request, response);
                 break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -65,11 +64,10 @@ public class StaffServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
 
+
         switch (action){
-            case "logout":
-                session.invalidate();
-                response.sendRedirect(request.getContextPath() + "/");
-                break;
+            case "":
+
 
                 //TODO add searchreservation and cancelreservation and bill
 

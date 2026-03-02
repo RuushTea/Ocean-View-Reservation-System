@@ -38,7 +38,7 @@
                 Help
             </a>
 
-            <form method="post" action="<%= request.getContextPath() %>/staff?action=logout">
+            <form method="get" action="<%= request.getContextPath() %>/logout">
                 <button class="w-full rounded-lg bg-slate-800 text-white px-4 py-3 font-semibold hover:bg-slate-900">
                     Logout
                 </button>
