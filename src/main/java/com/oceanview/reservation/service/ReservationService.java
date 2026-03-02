@@ -11,5 +11,5 @@ public interface ReservationService {
     Reservation searchReservation(int reservationId);
     void checkAvailability(String roomType, Date checkInDate, Date checkOutDate);
     boolean checkRoomAvailability(int roomTypeId, Date checkInDate, Date checkOutDate);
-    void cancelReservation(int reservationId);
+    boolean cancelReservation(int reservationId);
 }

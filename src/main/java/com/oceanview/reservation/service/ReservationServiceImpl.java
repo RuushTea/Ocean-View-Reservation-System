@@ -70,8 +70,8 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public void cancelReservation(int reservationId) {
-
+    public boolean cancelReservation(int reservationId) {
+        return reservationDAO.updateStatus(reservationId, "CANCELLED");
     }
 
 

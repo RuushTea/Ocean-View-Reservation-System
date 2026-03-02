@@ -41,17 +41,20 @@ public class ReservationDAO {
 
     }
 
-    public void updateStatus(int reservationid, String status){
+    public boolean updateStatus(int reservationid, String status){
         String sql = "UPDATE reservation SET status = ? WHERE reservationId = ?";
 
+        //Update the status of the reservation
         try (Connection con = DBConnectionManager.getConnection();
         PreparedStatement ps = con.prepareStatement(sql)){
 
             ps.setString(1, status);
             ps.setInt(2, reservationid);
-            ps.executeUpdate();
+
+            return ps.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("Failed to update reservation status: " + e.getMessage());
+            return false;
         }
     }
 

@@ -30,8 +30,8 @@ public class StaffServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
         HttpSession session = request.getSession(false);
-        if (!isStaff(session)){
-            response.sendRedirect(request.getContextPath() + "/auth");
+        if (session == null || !isStaff(session)){
+            response.sendRedirect(request.getContextPath() + "/");
             return;
         }
 
@@ -71,11 +71,12 @@ public class StaffServlet extends HttpServlet {
         }
 
 
-        switch (action){
-            case "doSearch":
-                String id =  request.getParameter("reservationNo");
-                int reservationNo = 0;
+        int reservationNo;
+        String id = request.getParameter("reservationNo");
 
+        switch (action){
+            //Search reservation
+            case "doSearch":
                 try {
                     reservationNo = Integer.parseInt(id);
                     if (reservationNo < 0){throw new NumberFormatException();}
@@ -87,7 +88,7 @@ public class StaffServlet extends HttpServlet {
 
                 Reservation reservation = reservationService.searchReservation(reservationNo);
                 if (reservation == null){
-                    request.setAttribute("error", "Reservation not found for number " + reservationNo);
+                    request.setAttribute("error", "Reservation not found for No: " + reservationNo);
                     request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
                     return;
                 }
@@ -96,7 +97,23 @@ public class StaffServlet extends HttpServlet {
                 request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
                 break;
 
-                //TODO add cancelreservation and bill
+            case "cancelReservation":
+
+                try {
+                    reservationNo = Integer.parseInt(id);
+                } catch (Exception e){
+                    response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
+                    return;
+                }
+
+                boolean success = reservationService.cancelReservation(reservationNo);
+                if (!success){
+                    request.setAttribute("error", "Failed to cancel reservation for No: " + reservationNo);
+                    request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request,response);
+                    return;
+                }
+                response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
+                break;
 
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

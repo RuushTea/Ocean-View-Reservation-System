@@ -77,7 +77,7 @@
         <div class="mt-6 flex flex-col sm:flex-row gap-3">
             <form method="post" action="<%= request.getContextPath() %>/staff/home" class="w-full sm:w-auto">
                 <input type="hidden" name="action" value="cancelReservation"/>
-                <input type="hidden" name="reservationId" value="<%= reservation.getReservationId() %>"/>
+                <input type="hidden" name="reservationNo" value="<%= reservation.getReservationId() %>"/>
                 <button class="w-full rounded-lg bg-red-600 text-white px-4 py-2 font-semibold hover:bg-red-700">
                     Cancel Reservation
                 </button>
@@ -85,7 +85,7 @@
 
             <form method="post" action="<%= request.getContextPath() %>/staff/home" class="w-full sm:w-auto">
                 <input type="hidden" name="action" value="generateBill"/>
-                <input type="hidden" name="reservationId" value="<%= reservation.getReservationId() %>"/>
+                <input type="hidden" name="reservationNo" value="<%= reservation.getReservationId() %>"/>
                 <button class="w-full rounded-lg bg-emerald-600 text-white px-4 py-2 font-semibold hover:bg-emerald-700">
                     Calculate / Print Bill
                 </button>
