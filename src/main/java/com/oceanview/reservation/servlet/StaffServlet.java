@@ -1,5 +1,9 @@
 package com.oceanview.reservation.servlet;
 
+import com.oceanview.reservation.model.Reservation;
+import com.oceanview.reservation.service.ReservationService;
+import com.oceanview.reservation.service.ReservationServiceImpl;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,8 +15,10 @@ import java.io.IOException;
 @WebServlet(name = "StaffServlet", value = "/staff/home")
 public class StaffServlet extends HttpServlet {
 
+    private final ReservationService reservationService = new ReservationServiceImpl();
+
     private boolean isStaff(HttpSession session) {
-        if (session.getAttribute("staff") == null){
+        if (session.getAttribute("role") == null){
             return false;
         }
         Object role = session.getAttribute("role");
@@ -24,7 +30,7 @@ public class StaffServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
         HttpSession session = request.getSession(false);
-        if (session == null || !"STAFF".equals(session.getAttribute("role"))) {
+        if (!isStaff(session)){
             response.sendRedirect(request.getContextPath() + "/auth");
             return;
         }
@@ -39,7 +45,7 @@ public class StaffServlet extends HttpServlet {
 
         switch (action){
             case "searchReservation":
-                request.getRequestDispatcher("/staff/SearchReservation.jsp").forward(request, response);
+                request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request, response);
                 break;
             case "help":
                 request.getRequestDispatcher("/staff/help.jsp").forward(request, response);
@@ -66,10 +72,31 @@ public class StaffServlet extends HttpServlet {
 
 
         switch (action){
-            case "":
+            case "doSearch":
+                String id =  request.getParameter("reservationNo");
+                int reservationNo = 0;
 
+                try {
+                    reservationNo = Integer.parseInt(id);
+                    if (reservationNo < 0){throw new NumberFormatException();}
+                } catch (Exception e){
+                    request.setAttribute("error", "Enter a valid reservation number");
+                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
+                    return;
+                }
 
-                //TODO add searchreservation and cancelreservation and bill
+                Reservation reservation = reservationService.searchReservation(reservationNo);
+                if (reservation == null){
+                    request.setAttribute("error", "Reservation not found for number " + reservationNo);
+                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
+                    return;
+                }
+
+                request.setAttribute("reservation", reservation);
+                request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
+                break;
+
+                //TODO add cancelreservation and bill
 
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

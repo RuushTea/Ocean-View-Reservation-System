@@ -29,12 +29,12 @@
             </a>
 
             <a class="rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-center hover:bg-slate-100"
-               href="<%= request.getContextPath() %>/staff?action=searchReservation">
+               href="<%= request.getContextPath() %>/staff/home?action=searchReservation">
                 Search Reservation
             </a>
 
             <a class="rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-center hover:bg-slate-100"
-               href="<%= request.getContextPath() %>/staff?action=help">
+               href="<%= request.getContextPath() %>/staff/home?action=help">
                 Help
             </a>
 
