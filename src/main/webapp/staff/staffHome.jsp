@@ -12,19 +12,39 @@
 %>
 <!DOCTYPE html>
 <html>
-<head><title>Staff Dashboard</title></head>
-<body>
-<h2>Staff Dashboard</h2>
-<p>Welcome, <%= staff != null ? staff.getFullName() : "Staff" %></p>
+<head>
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/tailwindcssOutput.css">
+</head>
+<body class="min-h-screen bg-slate-50">
+<div class="mx-auto max-w-4xl p-6">
+    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <h1 class="text-2xl font-bold">Staff Dashboard</h1>
+        <p class="text-slate-600 mt-1">Manage reservations, billing, and help.</p>
 
-<ul>
-    <li><a href="<%= request.getContextPath() %>/reservation">Create Reservation</a></li>
-    <li><a href="<%= request.getContextPath() %>/staff/reservation/search">Search Reservation</a></li>
-    <li><a href="<%= request.getContextPath() %>/staff/reservation/cancel">Cancel Reservation</a></li>
-    <li><a href="<%= request.getContextPath() %>/staff/bill">Calculate Bill</a></li>
-    <li><a href="#">Help Articles</a></li>
-</ul>
+        <div class="mt-6 grid grid-cols-1 gap-3">
+            <a class="rounded-lg bg-blue-600 text-white px-4 py-3 font-semibold text-center hover:bg-blue-700"
+               href="<%= request.getContextPath() %>/reservation">
+                Create Reservation for Guest
+            </a>
 
-<a href="<%= request.getContextPath() %>/logout">Logout</a>
+            <a class="rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-center hover:bg-slate-100"
+               href="<%= request.getContextPath() %>/staff?action=searchReservation">
+                Search Reservation
+            </a>
+
+            <a class="rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-center hover:bg-slate-100"
+               href="<%= request.getContextPath() %>/staff?action=help">
+                Help
+            </a>
+
+            <form method="post" action="<%= request.getContextPath() %>/staff?action=logout">
+                <button class="w-full rounded-lg bg-slate-800 text-white px-4 py-3 font-semibold hover:bg-slate-900">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
