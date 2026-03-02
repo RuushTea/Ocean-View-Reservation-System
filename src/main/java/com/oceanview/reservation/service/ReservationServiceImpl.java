@@ -92,5 +92,24 @@ public class ReservationServiceImpl implements ReservationService{
         return new Bill(reservationId, nights, ratePerNight);
     }
 
+    @Override
+    public boolean toggleCancel(int reservationId) {
+
+        String currentStatus = reservationDAO.getStatus(reservationId);
+
+        if (currentStatus == null){return false;}
+
+        if ("CONFIRMED".equalsIgnoreCase(currentStatus)){
+            return reservationDAO.updateStatus(reservationId, "CANCELLED");
+        }
+
+        if ("CANCELLED".equalsIgnoreCase(currentStatus)){
+            return reservationDAO.updateStatus(reservationId, "CONFIRMED");
+        }
+
+        // Return false if the status is neither CONFIRMED nor CANCELLED
+        return false;
+    }
+
 
 }

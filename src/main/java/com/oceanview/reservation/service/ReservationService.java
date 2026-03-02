@@ -14,4 +14,5 @@ public interface ReservationService {
     boolean checkRoomAvailability(int roomTypeId, Date checkInDate, Date checkOutDate);
     boolean cancelReservation(int reservationId);
     Bill generateBill(int reservationId);
+    boolean toggleCancel(int reservationId);
 }

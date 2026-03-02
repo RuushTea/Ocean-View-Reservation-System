@@ -139,6 +139,30 @@ public class StaffServlet extends HttpServlet {
                 request.setAttribute("bill", bill);
                 request.getRequestDispatcher("/staff/staffGenerateBill.jsp").forward(request, response);
             }
+            //Toggle to either cancel or reinstate reservation
+            case "toggleCancel":{
+                try {
+                    reservationNo = Integer.parseInt(request.getParameter("reservationId"));
+                } catch (Exception e){
+                    response.sendRedirect(request.getContextPath() + "/staff/home?action=searchReservation");
+                    return;
+                }
+
+                boolean success = reservationService.toggleCancel(reservationNo);
+                if (!success) {
+                    request.setAttribute("error", "Unable to change reservation status for no:" + reservationNo);
+                    request.getRequestDispatcher("/staff/staffSearchReservation.jsp").forward(request,response);
+                    return;
+                }
+
+                // Get the updated reservation to display
+                Reservation updatedReservation = reservationService.searchReservation(reservationNo);
+                request.setAttribute("reservation", updatedReservation);
+                request.getRequestDispatcher("/staff/staffReservationDetails.jsp").forward(request, response);
+//                response.sendRedirect(request.getContextPath() + "/staff/staffReservationDetails.jsp");
+                break;
+            }
+
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
