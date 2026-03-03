@@ -39,6 +39,7 @@ public class AdminServiceImpl implements AdminService{
         return systemUserDAO.updateStaffUser(userId, username, password, fullName);
     }
 
+    // Create a full System User
     @Override
     public boolean createStaff(String username, String password, String fullName) {
         if (username == null || username.trim().isEmpty() ||
@@ -47,19 +48,16 @@ public class AdminServiceImpl implements AdminService{
             return false;
         }
 
-        // Check if username already exists
         if (systemUserDAO.findByUsername(username) != null) {
             return false;
         }
 
         try {
-            // Create system user first
             int userId = systemUserDAO.createSystemUser(username, password, fullName, true);
             if (userId == -1) {
                 return false;
             }
 
-            // Create staff record
             staffDAO.insertStaff(userId);
             return true;
         } catch (Exception e) {

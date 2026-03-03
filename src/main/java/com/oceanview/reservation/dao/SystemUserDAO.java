@@ -43,8 +43,6 @@ public class SystemUserDAO {
     }
 
 
-
-
     // Check if a System User is active
     public boolean isActive(int userId) {
         String sql = "SELECT active FROM system_user WHERE userId = ?";
@@ -79,16 +77,17 @@ public class SystemUserDAO {
         }
     }
 
-        public SystemUser findByUsername(String username) {
+    // Find a System User by username
+    public SystemUser findByUsername(String username) {
         String sql = "SELECT userId, userName, password, fullName, active " +
                 "FROM system_user WHERE userName = ?";
 
         try (Connection con = DBConnectionManager.getConnection();
-        PreparedStatement ps = con.prepareStatement(sql)){
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, username);
 
-            try (ResultSet rs = ps.executeQuery()){
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     SystemUser user = new SystemUser();
                     user.setUserId(rs.getInt("userId"));
@@ -99,12 +98,13 @@ public class SystemUserDAO {
                     return user;
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Find user by username failed: " + e.getMessage());
         }
         return null;
     }
 
+    // Find a System User by User ID
     public SystemUser findStaffUserByUserId(int userId) {
         String sql =
                 "SELECT su.userId, su.username, su.password, su.fullName, su.active " +
@@ -134,30 +134,30 @@ public class SystemUserDAO {
         return null;
     }
 
+    // Update a System User's details
     public boolean updateStaffUser(int userId, String username, String password, String fullName) {
         StringBuilder sql = new StringBuilder("UPDATE system_user su SET ");
         List<Object> params = new ArrayList<>();
-        
+
         if (username != null) {
             sql.append("su.username = ?, ");
             params.add(username);
         }
-        
+
         if (password != null) {
             sql.append("su.password = ?, ");
             params.add(password);
         }
-        
+
         if (fullName != null) {
             sql.append("su.fullName = ?, ");
             params.add(fullName);
         }
-        
-        // Remove trailing comma and space
+
         if (sql.toString().endsWith(", ")) {
             sql.setLength(sql.length() - 2);
         }
-        
+
         sql.append(" WHERE su.userId = ? AND EXISTS (SELECT 1 FROM staff s WHERE s.userId = su.userId)");
         params.add(userId);
 
@@ -174,28 +174,6 @@ public class SystemUserDAO {
             System.out.println("updateStaffUser failed: " + e.getMessage());
             return false;
         }
-    }
-
-    public Admin findAdminByUserId(int userId){
-        String sql = "SELECT adminID, createdAt FROM admin WHERE userId = ?";
-
-        try (Connection con = DBConnectionManager.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)){
-                ps.setInt(1, userId);
-
-                try (ResultSet rs = ps.executeQuery()){
-                    if (rs.next()){
-                        Admin admin = new Admin();
-                        admin.setAdminId(rs.getInt("adminId"));
-                        admin.setCreatedAt(rs.getDate("createdAt"));
-                        return admin;
-                    }
-                }
-            } catch (Exception e) {
-            System.out.println("Find Admin by UserID failed: " + e.getMessage());
-        }
-
-        return null;
     }
 
     public List<SystemUser> getAllStaffUsers() {
@@ -225,21 +203,6 @@ public class SystemUserDAO {
             throw new RuntimeException("getAllStaffUsers failed: " + e.getMessage(), e);
         }
         return staffUsers;
-    }
-
-    public boolean updateActive(int userId, boolean isActive){
-        String sql = "UPDATE system_user SET active = ? WHERE userId = ?";
-
-        try (Connection con = DBConnectionManager.getConnection();
-        PreparedStatement ps = con.prepareStatement(sql)){
-
-            ps.setBoolean(1, isActive);
-            ps.setInt(2, userId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e){
-            System.out.println("Failed to update user active status: " + e.getMessage());
-            return false;
-        }
     }
 
 }

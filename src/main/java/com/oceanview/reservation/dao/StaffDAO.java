@@ -45,39 +45,4 @@ public class StaffDAO {
             return null;
         }
     }
-
-
-
-    public List<Staff> getAllStaff() {
-        String sql =
-                "SELECT s.staffId, su.userId, su.username, su.password, su.fullName, su.active " +
-                        "FROM staff s " +
-                        "JOIN system_user su ON s.userId = su.userId " +
-                        "ORDER BY s.staffId DESC";
-
-        List<Staff> list = new ArrayList<>();
-
-        try (Connection con = DBConnectionManager.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Staff st = new Staff();
-                st.setStaffId(rs.getInt("staffId"));
-
-                st.setUserId(rs.getInt("userId"));
-                st.setUserName(rs.getString("username"));
-                st.setPassword(rs.getString("password"));
-                st.setFullName(rs.getString("fullName"));
-                st.setActive(rs.getBoolean("active"));
-
-                list.add(st);
-            }
-
-            return list;
-
-        } catch (SQLException e) {
-            throw new RuntimeException("findAllStaffWithUser failed: " + e.getMessage(), e);
-        }
-    }
 }
