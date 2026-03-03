@@ -21,7 +21,7 @@
 <body class="min-h-screen bg-slate-50 text-slate-900">
 <div class="mx-auto max-w-6xl px-4 py-8">
 
-    <!-- Header -->
+    <%--Header--%>
     <header class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex items-start justify-between gap-4">
         <div>
             <h1 class="text-xl font-bold">Admin Dashboard</h1>
@@ -78,10 +78,6 @@
 
         </div>
     </section>
-
-    <footer class="mt-10 text-center text-xs text-slate-500">
-        <%= java.time.Year.now() %> Ocean View Resort | Admin Panel
-    </footer>
 
 </div>
 </body>
