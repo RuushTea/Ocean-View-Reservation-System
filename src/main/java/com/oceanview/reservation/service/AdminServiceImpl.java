@@ -3,6 +3,8 @@ package com.oceanview.reservation.service;
 import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.dao.StaffDAO;
 import com.oceanview.reservation.dao.SystemUserDAO;
+import com.oceanview.reservation.service.factory.UserFactory;
+import com.oceanview.reservation.service.factory.UserFactoryImpl;
 import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.model.SystemUser;
 
@@ -13,6 +15,7 @@ public class AdminServiceImpl implements AdminService{
     private final SystemUserDAO systemUserDAO = new SystemUserDAO();
     private final StaffDAO staffDAO = new StaffDAO();
     private final ReservationDAO reservationDAO = new ReservationDAO();
+    private final UserFactory userFactory = new UserFactoryImpl();
 
     @Override
     public List<SystemUser> getAllStaffUsers() {
@@ -41,7 +44,6 @@ public class AdminServiceImpl implements AdminService{
         return systemUserDAO.updateStaffUser(userId, username, password, fullName);
     }
 
-    // Create a full System User
     @Override
     public boolean createStaff(String username, String password, String fullName) {
         if (username == null || username.trim().isEmpty() ||
@@ -55,7 +57,8 @@ public class AdminServiceImpl implements AdminService{
         }
 
         try {
-            int userId = systemUserDAO.createSystemUser(username, password, fullName, true);
+            SystemUser systemUser = userFactory.createSystemUser(username, password, fullName, true);
+            int userId = systemUserDAO.createSystemUser(systemUser.getUserName(), systemUser.getPassword(), systemUser.getFullName(), systemUser.isActive());
             if (userId == -1) {
                 return false;
             }
