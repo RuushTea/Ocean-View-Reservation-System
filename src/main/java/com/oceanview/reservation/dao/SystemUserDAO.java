@@ -93,4 +93,19 @@ public class SystemUserDAO {
         return null;
     }
 
+    public boolean updateActive(int userId, boolean isActive){
+        String sql = "UPDATE system_user SET active = ? WHERE userId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setBoolean(1, isActive);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e){
+            System.out.println("Failed to update user active status: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

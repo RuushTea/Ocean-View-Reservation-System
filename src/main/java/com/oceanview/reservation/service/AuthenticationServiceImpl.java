@@ -1,6 +1,8 @@
 package com.oceanview.reservation.service;
 
+import com.oceanview.reservation.dao.AdminDAO;
 import com.oceanview.reservation.dao.GuestDAO;
+import com.oceanview.reservation.dao.StaffDAO;
 import com.oceanview.reservation.dao.SystemUserDAO;
 import com.oceanview.reservation.model.Admin;
 import com.oceanview.reservation.model.Guest;
@@ -12,16 +14,15 @@ import java.sql.SQLException;
 public class AuthenticationServiceImpl implements AuthenticationService{
     private final GuestDAO guestDAO = new GuestDAO();
     private final SystemUserDAO systemUserDAO = new SystemUserDAO();
+    private final AdminDAO adminDAO = new AdminDAO();
+    private final StaffDAO staffDAO = new StaffDAO();
 
     @Override
     public Staff authenticateStaff(String username, String password) {
 
-        SystemUser base = systemUserDAO.findByUsername(username);
-        if (base == null) return null;
-        if (!base.isActive()) return null;
-        if (!password.equals(base.getPassword())) return null;
+        SystemUser base = authenticationBase(username, password);
 
-        Staff staff = systemUserDAO.findStaffByUserId(base.getUserId());
+        Staff staff = staffDAO.findByUserId(base.getUserId());
         if (staff == null) return null;
 
         //Copy the fields into staff object
@@ -38,12 +39,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Override
     public Admin authenticateAdmin(String username, String password) {
 
-        SystemUser base = systemUserDAO.findByUsername(username);
-        if (base == null) return null;
-        if (!base.isActive()) return null;
-        if (!password.equals(base.getPassword())) return null;
+        SystemUser base = authenticationBase(username, password);
 
-        Admin admin = systemUserDAO.findAdminByUserId(base.getUserId());
+        Admin admin = adminDAO.findByUserId(base.getUserId());
         if (admin == null) return null;
 
         //Copy the fields into admin object
@@ -54,6 +52,14 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         admin.setActive(base.isActive());
 
         return admin;
+    }
+
+    private SystemUser authenticationBase(String username, String password){
+        SystemUser base = systemUserDAO.findByUsername(username);
+        if (base == null || !base.isActive() || !password.equals(base.getPassword())) {
+            return null;
+        }
+        return base;
     }
 
     @Override
