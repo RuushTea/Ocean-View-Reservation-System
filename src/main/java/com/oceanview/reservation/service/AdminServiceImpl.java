@@ -3,8 +3,8 @@ package com.oceanview.reservation.service;
 import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.dao.StaffDAO;
 import com.oceanview.reservation.dao.SystemUserDAO;
-import com.oceanview.reservation.factory.UserFactory;
-import com.oceanview.reservation.factory.UserFactoryImpl;
+import com.oceanview.reservation.service.factory.UserFactory;
+import com.oceanview.reservation.service.factory.UserFactoryImpl;
 import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.model.SystemUser;
 

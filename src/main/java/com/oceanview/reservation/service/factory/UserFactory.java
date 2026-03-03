@@ -1,4 +1,4 @@
-package com.oceanview.reservation.factory;
+package com.oceanview.reservation.service.factory;
 
 import com.oceanview.reservation.model.Admin;
 import com.oceanview.reservation.model.Guest;
