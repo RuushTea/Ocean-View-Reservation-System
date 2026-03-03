@@ -21,7 +21,7 @@
     <li><a href="#">Create Reservation</a></li>
     <li><a href="#">Manage Staff</a></li>
     <li><a href="#">Deactivate Accounts</a></li>
-    <li><a href="#">Help Articles</a></li>
+    <li><a href="<%= request.getContextPath() %>/help">Help</a></li>
 
 </ul>
 

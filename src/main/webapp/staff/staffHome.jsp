@@ -34,7 +34,7 @@
             </a>
 
             <a class="rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-center hover:bg-slate-100"
-               href="<%= request.getContextPath() %>/staff/home?action=help">
+               href="<%= request.getContextPath() %>/help">
                 Help
             </a>
 
