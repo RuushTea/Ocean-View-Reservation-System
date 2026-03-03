@@ -63,7 +63,7 @@
             <a href="<%= request.getContextPath() %>/admin/home?action=adminManageStaff"
                class="block rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50">
                 <p class="text-sm font-semibold text-slate-900">Manage Staff</p>
-                <p class="mt-1 text-sm text-slate-600">Update staff accounts.</p>
+                <p class="mt-1 text-sm text-slate-600">Create / update staff accounts.</p>
             </a>
 
             <%--Help Articles--%>
@@ -73,7 +73,11 @@
                 <p class="mt-1 text-sm text-slate-600">Read help documentations.</p>
             </a>
 
+            <%--View all reservations--%>
+            <a href="<%= request.getContextPath() %>/admin/home?action=viewAllReservations"
                class="block rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50">
+                <p class="text-sm font-semibold text-slate-900">View All Reservations</p>
+                <p class="mt-1 text-sm text-slate-600">Search and view all reservation records.</p>
             </a>
 
         </div>

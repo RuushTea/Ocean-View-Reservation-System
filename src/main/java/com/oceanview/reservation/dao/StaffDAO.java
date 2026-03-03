@@ -13,7 +13,7 @@ import java.util.List;
 public class StaffDAO {
 
     public void insertStaff(int userId){
-        String sql = "INSERT INTO staff (userId) VALUES (?)";
+        String sql = "INSERT INTO staff (userId, staffSince) VALUES (?, CURRENT_DATE)";
 
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

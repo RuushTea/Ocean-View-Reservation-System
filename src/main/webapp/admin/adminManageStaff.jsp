@@ -12,6 +12,7 @@
 <%
     List<SystemUser> staffUsers = (List<SystemUser>) request.getAttribute("staffUsers");
     String error = (String) request.getAttribute("error");
+    String msg = request.getParameter("msg");
 %>
 
 <!DOCTYPE html>
@@ -25,12 +26,30 @@
 <div class="mx-auto max-w-5xl px-4 py-8">
 
     <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-        <h1 class="text-xl font-bold">Manage Staff</h1>
-        <p class="mt-1 text-slate-600">View and update staff system accounts.</p>
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold">Manage Staff</h1>
+                <p class="mt-1 text-slate-600">View and update staff system accounts.</p>
+            </div>
+            <a class="rounded-lg bg-blue-600 text-white px-4 py-2 font-semibold hover:bg-blue-700 inline-block"
+               href="<%= request.getContextPath() %>/admin/home?action=adminCreateStaff">
+                Create Staff
+            </a>
+        </div>
 
         <% if (error != null) { %>
         <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">
             <%= error %>
+        </div>
+        <% } %>
+
+        <% if (msg != null) { %>
+        <div class="mt-4 rounded-lg border border-green-200 bg-green-50 p-3 text-green-700">
+            <% if (msg.equals("created")) { %>
+                Staff account created successfully!
+            <% } else if (msg.equals("updated")) { %>
+                Staff account updated successfully!
+            <% } %>
         </div>
         <% } %>
 

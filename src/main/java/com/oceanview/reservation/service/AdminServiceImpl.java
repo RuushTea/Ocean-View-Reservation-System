@@ -1,5 +1,6 @@
 package com.oceanview.reservation.service;
 
+import com.oceanview.reservation.dao.StaffDAO;
 import com.oceanview.reservation.dao.SystemUserDAO;
 import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.model.SystemUser;
@@ -9,6 +10,7 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService{
 
     private final SystemUserDAO systemUserDAO = new SystemUserDAO();
+    private final StaffDAO staffDAO = new StaffDAO();
 
     @Override
     public List<SystemUser> getAllStaffUsers() {
@@ -35,6 +37,35 @@ public class AdminServiceImpl implements AdminService{
         }
 
         return systemUserDAO.updateStaffUser(userId, username, password, fullName);
+    }
+
+    @Override
+    public boolean createStaff(String username, String password, String fullName) {
+        if (username == null || username.trim().isEmpty() ||
+            password == null || password.trim().isEmpty() ||
+            fullName == null || fullName.trim().isEmpty()) {
+            return false;
+        }
+
+        // Check if username already exists
+        if (systemUserDAO.findByUsername(username) != null) {
+            return false;
+        }
+
+        try {
+            // Create system user first
+            int userId = systemUserDAO.createSystemUser(username, password, fullName, true);
+            if (userId == -1) {
+                return false;
+            }
+
+            // Create staff record
+            staffDAO.insertStaff(userId);
+            return true;
+        } catch (Exception e) {
+            System.out.println("createStaff failed: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override

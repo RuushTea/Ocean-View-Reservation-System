@@ -65,6 +65,11 @@ public class AdminServlet extends HttpServlet {
                 return;
             }
 
+            case "adminCreateStaff": {
+                request.getRequestDispatcher("/admin/adminCreateStaff.jsp").forward(request, response);
+                return;
+            }
+
             default:
                 response.sendRedirect(request.getContextPath() + "/admin/home?action=dashboard");
         }
@@ -101,6 +106,23 @@ public class AdminServlet extends HttpServlet {
                 }
 
                 response.sendRedirect(request.getContextPath() + "/admin/home?action=adminManageStaff&msg=updated");
+                return;
+            }
+
+            case "createStaff": {
+                String username = request.getParameter("username");
+                String password = request.getParameter("password");
+                String fullName = request.getParameter("fullName");
+
+                boolean created = adminService.createStaff(username, password, fullName);
+
+                if (!created) {
+                    request.setAttribute("error", "Failed to create staff. Username may already exist or inputs are invalid.");
+                    request.getRequestDispatcher("/admin/adminCreateStaff.jsp").forward(request, response);
+                    return;
+                }
+
+                response.sendRedirect(request.getContextPath() + "/admin/home?action=adminManageStaff&msg=created");
                 return;
             }
 
