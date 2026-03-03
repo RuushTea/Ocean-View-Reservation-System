@@ -21,6 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     public Staff authenticateStaff(String username, String password) {
 
         SystemUser base = authenticationBase(username, password);
+        if (base == null) return null;
 
         Staff staff = staffDAO.findByUserId(base.getUserId());
         if (staff == null) return null;
@@ -40,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     public Admin authenticateAdmin(String username, String password) {
 
         SystemUser base = authenticationBase(username, password);
+        if (base == null) return null;
 
         Admin admin = adminDAO.findByUserId(base.getUserId());
         if (admin == null) return null;

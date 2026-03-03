@@ -48,7 +48,7 @@
     <%--Action buttons--%>
     <section class="mt-6 bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
         <h2 class="text-lg font-bold">Admin Actions</h2>
-        <p class="mt-1 text-sm text-slate-600">Choose an option below to continue.</p>
+        <p class="mt-1 text-sm text-slate-600">Choose an option.</p>
 
         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -66,11 +66,11 @@
                 <p class="mt-1 text-sm text-slate-600">Create / update staff accounts.</p>
             </a>
 
-            <%--Deactivate accounts--%>
-            <a href="<%= request.getContextPath() %>/admin/home?action=deactivateAccounts"
+            <%--Help Articles--%>
+            <a href="<%= request.getContextPath() %>/help"
                class="block rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50">
-                <p class="text-sm font-semibold text-slate-900">Deactivate Accounts</p>
-                <p class="mt-1 text-sm text-slate-600">Disable access for inactive users.</p>
+                <p class="text-sm font-semibold text-slate-900">Help Articles</p>
+                <p class="mt-1 text-sm text-slate-600">Read help documentations.</p>
             </a>
 
             <%--View all reservations--%>
