@@ -45,4 +45,18 @@ public class StaffDAO {
             return null;
         }
     }
+
+    public void deleteStaff(int userId) {
+        String sql = "DELETE FROM staff WHERE userId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("deleteStaff failed: " + e.getMessage(), e);
+        }
+    }
 }

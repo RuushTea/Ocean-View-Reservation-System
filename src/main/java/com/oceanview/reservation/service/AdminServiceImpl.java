@@ -67,6 +67,38 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public boolean toggleStaffActive(int userId) {
+        try {
+            SystemUser staff = systemUserDAO.findStaffUserByUserId(userId);
+            if (staff == null) {
+                return false;
+            }
+            
+            boolean newActiveStatus = !staff.isActive();
+            return systemUserDAO.updateActive(userId, newActiveStatus);
+        } catch (Exception e) {
+            System.out.println("toggleStaffActive failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteStaff(int userId) {
+        try {
+            SystemUser staff = systemUserDAO.findStaffUserByUserId(userId);
+            if (staff == null) {
+                return false;
+            }
+
+            staffDAO.deleteStaff(userId);
+            return systemUserDAO.deleteUser(userId);
+        } catch (Exception e) {
+            System.out.println("deleteStaff failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
     public List<Reservation> getAllReservations() {
         return List.of();
     }

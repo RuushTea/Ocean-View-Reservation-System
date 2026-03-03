@@ -205,4 +205,35 @@ public class SystemUserDAO {
         return staffUsers;
     }
 
+    public boolean deleteUser(int userId) {
+        String sql = "DELETE FROM system_user WHERE userId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Failed to delete user: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean updateActive(int userId, boolean active) {
+        String sql = "UPDATE system_user SET active = ? WHERE userId = ?";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setBoolean(1, active);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Failed to update user active status: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

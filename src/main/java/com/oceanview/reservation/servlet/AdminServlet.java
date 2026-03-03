@@ -126,6 +126,38 @@ public class AdminServlet extends HttpServlet {
                 return;
             }
 
+            case "toggleActive": {
+                int userId = Integer.parseInt(request.getParameter("userId"));
+                boolean toggled = adminService.toggleStaffActive(userId);
+                
+                if (!toggled) {
+                    request.setAttribute("error", "Failed to toggle staff active status.");
+                    List<SystemUser> staffUsers = adminService.getAllStaffUsers();
+                    request.setAttribute("staffUsers", staffUsers);
+                    request.getRequestDispatcher("/admin/adminManageStaff.jsp").forward(request, response);
+                    return;
+                }
+
+                response.sendRedirect(request.getContextPath() + "/admin/home?action=adminManageStaff&msg=toggled");
+                return;
+            }
+
+            case "deleteStaff": {
+                int userId = Integer.parseInt(request.getParameter("userId"));
+                boolean deleted = adminService.deleteStaff(userId);
+                
+                if (!deleted) {
+                    request.setAttribute("error", "Failed to delete staff.");
+                    List<SystemUser> staffUsers = adminService.getAllStaffUsers();
+                    request.setAttribute("staffUsers", staffUsers);
+                    request.getRequestDispatcher("/admin/adminManageStaff.jsp").forward(request, response);
+                    return;
+                }
+
+                response.sendRedirect(request.getContextPath() + "/admin/home?action=adminManageStaff&msg=deleted");
+                return;
+            }
+
             default:
                 response.sendRedirect(request.getContextPath() + "/admin/home?action=dashboard");
         }

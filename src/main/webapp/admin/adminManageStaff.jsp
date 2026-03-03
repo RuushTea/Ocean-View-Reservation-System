@@ -46,9 +46,13 @@
         <% if (msg != null) { %>
         <div class="mt-4 rounded-lg border border-green-200 bg-green-50 p-3 text-green-700">
             <% if (msg.equals("created")) { %>
-                Staff account created successfully!
+            Staff account created successfully!
             <% } else if (msg.equals("updated")) { %>
-                Staff account updated successfully!
+            Staff account updated successfully!
+            <% } else if (msg.equals("toggled")) { %>
+            Staff active status updated successfully!
+            <% } else if (msg.equals("deleted")) { %>
+            Staff account deleted successfully!
             <% } %>
         </div>
         <% } %>
@@ -70,19 +74,62 @@
                     for (SystemUser u : staffUsers) { %>
 
                 <tr class="border-b border-slate-100">
-                    <td class="py-2 pr-4"><%= u.getUserId() %></td>
-                    <td class="py-2 pr-4"><%= u.getUserName() %></td>
-                    <td class="py-2 pr-4"><%= u.getFullName() %></td>
-                    <td class="py-2 pr-4"><%= u.isActive() ? "Yes" : "No" %></td>
+                    <td class="py-2 pr-4"><%= u.getUserId() %>
+                    </td>
+                    <td class="py-2 pr-4"><%= u.getUserName() %>
+                    </td>
+                    <td class="py-2 pr-4"><%= u.getFullName() %>
+                    </td>
+                    <td class="py-2 pr-4"><%= u.isActive() ? "Yes" : "No" %>
+                    </td>
                     <td class="py-2 pr-4">
-                        <a class="rounded-lg border border-slate-300 bg-white px-3 py-1 font-semibold hover:bg-slate-100 inline-block"
-                           href="<%= request.getContextPath() %>/admin/home?action=adminEditUser&userId=<%= u.getUserId() %>">
-                            Edit
-                        </a>
+                        <div class="flex items-center gap-2 flex-wrap">
+
+                            <%--Edit--%>
+                            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold hover:bg-slate-100 transition"
+                               href="<%= request.getContextPath() %>/admin/home?action=adminEditUser&userId=<%= u.getUserId() %>">
+                                Edit
+                            </a>
+
+                            <%--Change with activate and deactivate--%>
+                            <form method="post"
+                                  action="<%= request.getContextPath() %>/admin/home"
+                                  class="inline">
+                                <input type="hidden" name="action" value="toggleActive">
+                                <input type="hidden" name="userId" value="<%= u.getUserId() %>">
+
+                                <button type="submit"
+                                        class="inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-semibold transition
+                                <%= u.isActive()
+                                ? "bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200"
+                                : "bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200" %>">
+                                    <%= u.isActive() ? "Deactivate" : "Activate" %>
+                                </button>
+                            </form>
+
+                            <%--Delete--%>
+                            <form method="post"
+                                  action="<%= request.getContextPath() %>/admin/home"
+                                  class="inline"
+                                  onsubmit="return confirm('Are you sure you want to delete this staff member?');">
+
+                                <input type="hidden" name="action" value="deleteStaff">
+                                <input type="hidden" name="userId" value="<%= u.getUserId() %>">
+
+                                <button type="submit"
+                                        class="inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-semibold
+                                        bg-red-100 text-red-800 border border-red-300
+                                        hover:bg-red-200 transition">
+                                    Delete
+                                </button>
+                            </form>
+
+                        </div>
                     </td>
                 </tr>
 
-                <% } } %>
+                <% }
+                } %>
                 </tbody>
             </table>
         </div>
