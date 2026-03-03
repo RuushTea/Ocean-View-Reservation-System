@@ -93,13 +93,13 @@ public class AdminServlet extends HttpServlet {
             case "updateStaffCredentials": {
                 int userId = Integer.parseInt(request.getParameter("userId"));
                 String username = request.getParameter("username");
-                String password = request.getParameter("password"); // may be blank
+                String password = request.getParameter("password");
                 String fullName = request.getParameter("fullName");
 
                 boolean updated = adminService.updateStaffUser(userId, username, password, fullName);
 
                 if (!updated) {
-                    request.setAttribute("error", "Update failed. Check inputs or staff account not found.");
+                    request.setAttribute("error", "Update failed, Check inputs or staff account not found.");
                     request.setAttribute("editUser", adminService.getStaffByUserId(userId));
                     request.getRequestDispatcher("/admin/adminEditUser.jsp").forward(request, response);
                     return;
