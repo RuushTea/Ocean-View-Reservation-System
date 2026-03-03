@@ -16,26 +16,26 @@ public class HelpServlet extends HttpServlet {
     private final HelpArticleService helpArticleService = new HelpArticleServiceImpl();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         // auth check
-        String role = (String) req.getSession().getAttribute("role");
+        String role = (String) request.getSession().getAttribute("role");
         if (role == null || !(role.equals("STAFF") || role.equals("ADMIN"))) {
-            resp.sendRedirect(req.getContextPath() + "/auth");
+            response.sendRedirect(request.getContextPath() + "/auth");
             return;
         }
 
-        String idParam = req.getParameter("id");
+        String articleId = request.getParameter("id");
 
-        if (idParam == null) {
-            req.setAttribute("articles", helpArticleService.getAllArticle());
-            req.getRequestDispatcher("/help/helpList.jsp").forward(req, resp);
+        if (articleId == null) {
+            request.setAttribute("articles", helpArticleService.getAllArticle());
+            request.getRequestDispatcher("/help/helpList.jsp").forward(request, response);
             return;
         }
 
-        int id = Integer.parseInt(idParam);
-        req.setAttribute("article", helpArticleService.getArticleById(id));
-        req.getRequestDispatcher("/help/helpView.jsp").forward(req, resp);
+        int id = Integer.parseInt(articleId);
+        request.setAttribute("article", helpArticleService.getArticleById(id));
+        request.getRequestDispatcher("/help/helpView.jsp").forward(request, response);
     }
 }
