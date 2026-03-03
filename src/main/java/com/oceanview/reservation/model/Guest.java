@@ -1,4 +1,48 @@
 package com.oceanview.reservation.model;
 
 public class Guest {
+    private int guestId;
+    private String name;
+    private String address;
+    private String contactNo;
+
+    public Guest(){}
+
+    public Guest(String name, String address, String contactNo) {
+        this.name = name;
+        this.address = address;
+        this.contactNo = contactNo;
+    }
+
+    public int getGuestId() {
+        return guestId;
+    }
+
+    public void setGuestId(int guestId) {
+        this.guestId = guestId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
 }
