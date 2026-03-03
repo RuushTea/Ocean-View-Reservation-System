@@ -1,5 +1,6 @@
 package com.oceanview.reservation.servlet;
 
+import com.oceanview.reservation.model.Reservation;
 import com.oceanview.reservation.model.Staff;
 import com.oceanview.reservation.model.SystemUser;
 import com.oceanview.reservation.service.AdminService;
@@ -67,6 +68,13 @@ public class AdminServlet extends HttpServlet {
 
             case "adminCreateStaff": {
                 request.getRequestDispatcher("/admin/adminCreateStaff.jsp").forward(request, response);
+                return;
+            }
+
+            case "viewAllReservations": {
+                List<Reservation> reservations = adminService.getAllReservations();
+                request.setAttribute("reservations", reservations);
+                request.getRequestDispatcher("/admin/adminViewReservations.jsp").forward(request, response);
                 return;
             }
 

@@ -217,6 +217,33 @@ public class ReservationDAO {
         return Collections.emptyList();
     }
 
+    public List<Reservation> getAllReservations() {
+        String sql = "SELECT res.reservationId, res.checkInDate, res.checkOutDate, res.status, " +
+                "g.guestId, g.name, g.address, g.contactNo, " +
+                "r.roomId, r.roomNumber, r.status AS roomStatus, " +
+                "rt.roomTypeId, rt.roomTypeName, rt.ratePerNight " +
+                "FROM reservation res " +
+                "JOIN room r ON res.roomId = r.roomId " +
+                "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
+                "JOIN guest g ON res.guestId = g.guestId " +
+                "ORDER BY res.reservationId DESC";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Reservation> reservationList = new ArrayList<>();
+                while (rs.next()) {
+                    reservationList.add(buildReservationFromResultSet(rs));
+                }
+                return reservationList;
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to get all reservations: " + e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
     //For all common reservation creations
     private Reservation buildReservationFromResultSet(ResultSet rs) throws SQLException {
         Guest guest = new Guest();

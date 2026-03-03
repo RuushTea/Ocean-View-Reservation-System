@@ -1,5 +1,6 @@
 package com.oceanview.reservation.service;
 
+import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.dao.StaffDAO;
 import com.oceanview.reservation.dao.SystemUserDAO;
 import com.oceanview.reservation.model.Reservation;
@@ -11,6 +12,7 @@ public class AdminServiceImpl implements AdminService{
 
     private final SystemUserDAO systemUserDAO = new SystemUserDAO();
     private final StaffDAO staffDAO = new StaffDAO();
+    private final ReservationDAO reservationDAO = new ReservationDAO();
 
     @Override
     public List<SystemUser> getAllStaffUsers() {
@@ -100,6 +102,6 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public List<Reservation> getAllReservations() {
-        return List.of();
+        return reservationDAO.getAllReservations();
     }
 }
