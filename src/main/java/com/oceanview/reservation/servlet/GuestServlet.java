@@ -17,7 +17,7 @@ public class GuestServlet extends HttpServlet {
     private final GuestDAO guestDAO = new GuestDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    protected void doGet(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/plain");
         String guestIdString = request.getParameter("guestId");
 
@@ -40,7 +40,7 @@ public class GuestServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         String name = request.getParameter("name");
         String address = request.getParameter("address");

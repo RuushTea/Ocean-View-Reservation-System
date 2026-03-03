@@ -19,15 +19,25 @@
         <h1 class="text-xl font-bold">Search Reservation</h1>
         <p class="mt-1 text-slate-600">Enter reservation number to find a booking.</p>
 
-        <form class="mt-6 space-y-3"
+        <form class="mt-6 space-y-4"
               method="post"
               action="<%= request.getContextPath() %>/staff/home">
+
             <input type="hidden" name="action" value="doSearch"/>
 
+            <!-- Search Type -->
             <div>
-                <label class="block text-sm font-semibold mb-1">Reservation No</label>
+                <label class="block text-sm font-semibold mb-1">Search By</label>
+                <select name="searchType" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="reservationNo">Reservation No</option>
+                    <option value="contactNo">Guest Contact No</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-1">Search Value</label>
                 <input class="w-full rounded-lg border border-slate-300 px-3 py-2"
-                       type="number" name="reservationNo" min="1" required>
+                       type="text" name="searchValue" required>
             </div>
 
             <div class="flex items-center gap-3">
@@ -47,6 +57,7 @@
                 <%= error %>
             </div>
             <% } %>
+
         </form>
     </div>
 
