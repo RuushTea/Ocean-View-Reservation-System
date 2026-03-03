@@ -31,7 +31,12 @@
             <p class="text-sm text-slate-500">Guidelines for Staff and Admin users</p>
         </div>
 
-        <a href="<%= request.getContextPath() %>/staff/home"
+        <%--Back button to return to role specific home--%>
+        <%
+            String role = (String) session.getAttribute("role");
+            String url = "/" + role.toLowerCase() + "/home";
+        %>
+        <a href="<%= request.getContextPath() + url %>"
            class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 shadow-sm">
             Back to Dashboard
         </a>
