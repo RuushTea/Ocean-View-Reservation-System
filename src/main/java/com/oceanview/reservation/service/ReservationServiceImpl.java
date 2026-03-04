@@ -6,6 +6,7 @@ import com.oceanview.reservation.dao.RoomDAO;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
+import com.oceanview.reservation.model.ReservationRequest;
 import com.oceanview.reservation.model.Room;
 
 import java.sql.SQLException;
@@ -170,5 +171,23 @@ public class ReservationServiceImpl implements ReservationService{
         return false;
     }
 
+    @Override
+    public Reservation createReservationFromRequest(ReservationRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        Guest guest = new Guest();
+        guest.setName(request.getGuestName());
+        guest.setAddress(request.getAddress());
+        guest.setContactNo(request.getContactNo());
+
+        return createReservation(guest, request.getRoomTypeId(), request.getCheckInDate(), request.getCheckOutDate());
+    }
+
+    @Override
+    public List<Reservation> getAllReservations() {
+        return reservationDAO.getAllReservations();
+    }
 
 }

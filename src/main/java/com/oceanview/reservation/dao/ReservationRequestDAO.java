@@ -11,7 +11,8 @@ import java.util.List;
 public class ReservationRequestDAO {
 
     public int createReservationRequest(ReservationRequest request) {
-        String sql = "INSERT INTO reservation_requests (guest_name, address, contact_no, room_type_id, check_in_date, check_out_date, status, requested_by_user_id, request_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation_requests (guestName, address, contactNo, roomTypeId, " +
+                "checkInDate, checkOutDate, status, requestedByUserId, requestDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -43,7 +44,7 @@ public class ReservationRequestDAO {
     }
 
     public ReservationRequest findById(int requestId) {
-        String sql = "SELECT * FROM reservation_requests WHERE request_id = ?";
+        String sql = "SELECT * FROM reservation_requests WHERE requestId = ?";
         
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -61,7 +62,7 @@ public class ReservationRequestDAO {
     }
 
     public List<ReservationRequest> findByStatus(ReservationRequestStatus status) {
-        String sql = "SELECT * FROM reservation_requests WHERE status = ? ORDER BY request_date DESC";
+        String sql = "SELECT * FROM reservation_requests WHERE status = ? ORDER BY requestDate DESC";
         List<ReservationRequest> requests = new ArrayList<>();
         
         try (Connection con = DBConnectionManager.getConnection();
@@ -80,7 +81,7 @@ public class ReservationRequestDAO {
     }
 
     public boolean updateStatus(int requestId, ReservationRequestStatus status, int approvedByUserId, String rejectionReason) {
-        String sql = "UPDATE reservation_requests SET status = ?, approved_by_user_id = ?, rejection_reason = ?, processed_date = ? WHERE request_id = ?";
+        String sql = "UPDATE reservation_requests SET status = ?, approvedByUserId = ?, rejectedReason = ?, processedDate = ? WHERE requestId = ?";
         
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -99,7 +100,7 @@ public class ReservationRequestDAO {
     }
 
     public List<ReservationRequest> findAll() {
-        String sql = "SELECT * FROM reservation_requests ORDER BY request_date DESC";
+        String sql = "SELECT * FROM reservation_requests ORDER BY requestDate DESC";
         List<ReservationRequest> requests = new ArrayList<>();
         
         try (Connection con = DBConnectionManager.getConnection();
@@ -117,19 +118,19 @@ public class ReservationRequestDAO {
 
     private ReservationRequest mapResultSetToReservationRequest(ResultSet rs) throws SQLException {
         ReservationRequest request = new ReservationRequest();
-        request.setRequestId(rs.getInt("request_id"));
-        request.setGuestName(rs.getString("guest_name"));
+        request.setRequestId(rs.getInt("requestId"));
+        request.setGuestName(rs.getString("guestName"));
         request.setAddress(rs.getString("address"));
-        request.setContactNo(rs.getString("contact_no"));
-        request.setRoomTypeId(rs.getInt("room_type_id"));
-        request.setCheckInDate(rs.getDate("check_in_date"));
-        request.setCheckOutDate(rs.getDate("check_out_date"));
+        request.setContactNo(rs.getString("contactNo"));
+        request.setRoomTypeId(rs.getInt("roomTypeId"));
+        request.setCheckInDate(rs.getDate("checkInDate"));
+        request.setCheckOutDate(rs.getDate("checkOutDate"));
         request.setStatus(ReservationRequestStatus.valueOf(rs.getString("status")));
-        request.setRequestedByUserId(rs.getInt("requested_by_user_id"));
-        request.setApprovedByUserId(rs.getInt("approved_by_user_id"));
-        request.setRejectionReason(rs.getString("rejection_reason"));
-        request.setRequestDate(rs.getDate("request_date"));
-        request.setProcessedDate(rs.getDate("processed_date"));
+        request.setRequestedByUserId(rs.getInt("requestedByUserId"));
+        request.setApprovedByUserId(rs.getInt("approvedByUserId"));
+        request.setRejectionReason(rs.getString("rejectedReason"));
+        request.setRequestDate(rs.getDate("requestDate"));
+        request.setProcessedDate(rs.getDate("processedDate"));
         return request;
     }
 }

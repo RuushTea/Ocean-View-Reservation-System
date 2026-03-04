@@ -3,6 +3,7 @@ package com.oceanview.reservation.service;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
+import com.oceanview.reservation.model.ReservationRequest;
 
 import java.sql.Date;
 import java.util.List;
@@ -18,4 +19,8 @@ public interface ReservationService {
     boolean cancelReservation(int reservationId);
     Bill generateBill(int reservationId);
     boolean toggleCancel(int reservationId);
+    
+    // Approval workflow methods
+    Reservation createReservationFromRequest(ReservationRequest request);
+    List<Reservation> getAllReservations();
 }
