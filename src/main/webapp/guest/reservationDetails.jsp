@@ -20,7 +20,7 @@
             <h1 class="text-2xl font-bold tracking-tight">Ocean View Resort</h1>
             <p class="text-sm text-slate-500">Guest Reservation Portal</p>
         </div>
-        <a href="<%= request.getContextPath() %>/guest/view"
+        <a href="<%= request.getContextPath() %>/guest/view?action=viewForm"
            class="rounded-xl border border-slate-300 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition shadow-sm">
             Search Another
         </a>
@@ -133,14 +133,16 @@
                     
                     <% if ("CONFIRMED".equals(reservation.getStatus())) { %>
                         <div class="mt-4 pt-4 border-t border-slate-200 flex gap-2">
-                            <form action="<%= request.getContextPath() %>/guest/cancel" method="POST" onsubmit="return confirmCancel(<%= reservation.getReservationId() %>)">
+                            <form action="<%= request.getContextPath() %>/guest/view" method="POST" onsubmit="return confirmCancel(<%= reservation.getReservationId() %>)">
+                                <input type="hidden" name="action" value="cancelReservation">
                                 <input type="hidden" name="reservationId" value="<%= reservation.getReservationId() %>">
                                 <input type="hidden" name="contactNo" value="<%= reservation.getGuest().getContactNo() %>">
                                 <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium text-sm">
                                     Cancel Reservation
                                 </button>
                             </form>
-                            <form action="<%= request.getContextPath() %>/guest/bill" method="POST">
+                            <form action="<%= request.getContextPath() %>/guest/view" method="POST">
+                                <input type="hidden" name="action" value="generateBill">
                                 <input type="hidden" name="reservationId" value="<%= reservation.getReservationId() %>">
                                 <input type="hidden" name="contactNo" value="<%= reservation.getGuest().getContactNo() %>">
                                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">

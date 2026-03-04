@@ -30,6 +30,7 @@
         </h2>
 
         <form action="<%= request.getContextPath() %>/guest/view" method="POST" class="space-y-6" onsubmit="return validateForm()">
+            <input type="hidden" name="action" value="viewReservations">
             <% if (request.getAttribute("error") != null) { %>
                 <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                     <p class="text-red-700 text-sm font-medium">
@@ -50,7 +51,7 @@
                        pattern="[0-9]{10}"
                        maxlength="10"
                        required/>
-                <p class="mt-1 text-xs text-slate-500">Enter 10-digit contact number</p>
+                <p class="mt-1 text-xs text-slate-500">Enter contact number</p>
             </div>
 
             <button type="submit"
