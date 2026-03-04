@@ -27,26 +27,38 @@
         </div>
         <% } %>
 
-        <form action="<%= request.getContextPath()%>/reservation" method="POST" class="space-y-6">
+        <form action="<%= request.getContextPath()%>/reservation" method="POST" class="space-y-6" id="reservationForm">
             <div>
                 <h3 class="text-lg font-semibold mb-3">Guest Details</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="name" class="block text-sm font-medium mb-1">Guest Name</label>
                         <input type="text" id="name" name="name" required maxlength="80"
-                               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                               pattern="[A-Za-z\s]{2,80}"
+                               title="Guest name must contain only letters and spaces (2-80 characters)"
+                               oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '').slice(0,80)"
+                               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Enter guest name (letters only)"/>
                     </div>
 
                     <div>
                         <label for="contactNo" class="block text-sm font-medium mb-1">Contact Number</label>
-                        <input type="text" id="contactNo" name="contactNo" required maxlength="20"
-                               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                        <input type="tel" id="contactNo" name="contactNo" required maxlength="10"
+                               pattern="[0-9]{10}"
+                               title="Contact number must be exactly 10 digits"
+                               inputmode="numeric"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 10) this.value = this.value.slice(0,10);"
+                               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Enter 10-digit contact number"/>
                     </div>
 
                     <div class="md:col-span-2">
                         <label for="address" class="block text-sm font-medium mb-1">Address</label>
                         <input type="text" id="address" name="address" required maxlength="200"
-                               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                               pattern="[A-Za-z0-9\s\.,#-]{5,200}"
+                               title="Address must be at least 5 characters long"
+                               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Enter complete address (min 5 characters)"/>
                     </div>
                 </div>
             </div>
@@ -78,14 +90,23 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="checkInDate" class="block text-sm font-medium mb-1">Check-In Date</label>
+                            <%
+                                String today = java.time.LocalDate.now().toString();
+                                String checkInMin = today;
+                                String checkOutMin = today;
+                            %>
                             <input type="date" id="checkInDate" name="checkInDate" required
-                                   class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                                   class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   min="<%= checkInMin %>"
+                                   onchange="document.getElementById('checkOutDate').min = this.value; if(document.getElementById('checkOutDate').value && document.getElementById('checkOutDate').value < this.value) { document.getElementById('checkOutDate').value = ''; }"/>
                         </div>
 
                         <div>
                             <label for="checkOutDate" class="block text-sm font-medium mb-1">Check-Out Date</label>
                             <input type="date" id="checkOutDate" name="checkOutDate" required
-                                   class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                                   class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   min="<%= checkOutMin %>"
+                                   onchange="document.getElementById('checkInDate').max = this.value; if(document.getElementById('checkInDate').value && document.getElementById('checkInDate').value > this.value) { document.getElementById('checkInDate').value = ''; }"/>
                         </div>
                     </div>
                 </div>
@@ -115,18 +136,6 @@
     </div>
 </div>
 
-<script>
-    const checkIn = document.getElementById('checkInDate');
-    const checkOut = document.getElementById('checkOutDate');
-
-    // ensure checkout can't be before checkin
-    checkIn.addEventListener('change', () => {
-        checkOut.min = checkIn.value;
-        if (checkOut.value && checkOut.value < checkIn.value) {
-            checkOut.value = "";
-        }
-    });
-</script>
 
 </body>
 </html>
