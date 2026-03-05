@@ -4,8 +4,10 @@ import com.oceanview.reservation.dao.GuestDAO;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
-import com.oceanview.reservation.service.ReservationService;
 import com.oceanview.reservation.service.ReservationServiceImpl;
+import com.oceanview.reservation.service.facade.ReservationFacade;
+import com.oceanview.reservation.service.facade.ReservationFacadeInterface;
+import com.oceanview.reservation.service.BillServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +20,15 @@ import java.util.List;
 public class GuestServlet extends HttpServlet {
 
     private final GuestDAO guestDAO = new GuestDAO();
-    private final ReservationService reservationService = new ReservationServiceImpl();
+
+    private final ReservationFacadeInterface reservationFacade;
+
+    public GuestServlet() {
+        this.reservationFacade = new ReservationFacade(
+            new ReservationServiceImpl(),
+            new BillServiceImpl()
+        );
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
@@ -90,7 +100,7 @@ public class GuestServlet extends HttpServlet {
             return;
         }
 
-        List<Reservation> reservations = reservationService.searchByGuestContactNo(contactNo);
+        List<Reservation> reservations = reservationFacade.searchByGuestContactNo(contactNo);
 
         if (reservations == null || reservations.isEmpty()) {
             request.setAttribute("error", "No reservations found for this contact number");
@@ -114,10 +124,10 @@ public class GuestServlet extends HttpServlet {
         
         try {
             int reservationId = Integer.parseInt(reservationIdStr.trim());
-            boolean cancelled = reservationService.cancelReservation(reservationId);
+            boolean cancelled = reservationFacade.cancelReservation(reservationId);
             
             if (cancelled) {
-                List<Reservation> reservations = reservationService.searchByGuestContactNo(contactNo);
+                List<Reservation> reservations = reservationFacade.searchByGuestContactNo(contactNo);
                 request.setAttribute("reservations", reservations);
                 request.setAttribute("success", "Reservation cancelled successfully");
                 forwardToReservationDetails(request, response);
@@ -143,10 +153,10 @@ public class GuestServlet extends HttpServlet {
         
         try {
             int reservationId = Integer.parseInt(reservationIdStr.trim());
-            Bill bill = reservationService.generateBill(reservationId);
+            Bill bill = reservationFacade.generateBill(reservationId);
             
             if (bill != null) {
-                List<Reservation> reservations = reservationService.searchByGuestContactNo(contactNo);
+                List<Reservation> reservations = reservationFacade.searchByGuestContactNo(contactNo);
                 request.setAttribute("reservations", reservations);
                 request.setAttribute("bill", bill);
                 request.setAttribute("selectedReservationId", reservationId);

@@ -4,10 +4,10 @@ import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.dao.RoomTypeDAO;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Reservation;
-import com.oceanview.reservation.service.BillService;
-import com.oceanview.reservation.service.BillServiceImpl;
-import com.oceanview.reservation.service.ReservationService;
 import com.oceanview.reservation.service.ReservationServiceImpl;
+import com.oceanview.reservation.service.facade.ReservationFacade;
+import com.oceanview.reservation.service.facade.ReservationFacadeInterface;
+import com.oceanview.reservation.service.BillServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,10 +23,18 @@ import java.util.List;
 @WebServlet(name = "StaffServlet", value = "/staff/home")
 public class StaffServlet extends HttpServlet {
 
-    private final ReservationService reservationService = new ReservationServiceImpl();
-    private final BillService billService = new BillServiceImpl();
-    private final ReservationDAO reservationDAO = new ReservationDAO();
-    private final RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+    private final ReservationFacadeInterface reservationFacade;
+    private final ReservationDAO reservationDAO;
+    private final RoomTypeDAO roomTypeDAO;
+
+    public StaffServlet() {
+        this.reservationFacade = new ReservationFacade(
+            new ReservationServiceImpl(),
+            new BillServiceImpl()
+        );
+        this.reservationDAO = new ReservationDAO();
+        this.roomTypeDAO = new RoomTypeDAO();
+    }
 
 
     private boolean isStaff(HttpSession session) {
@@ -116,7 +124,7 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                boolean success = reservationService.cancelReservation(reservationNo);
+                boolean success = reservationFacade.cancelReservation(reservationNo);
                 if (!success) {
                     request.setAttribute("error", "Failed to cancel reservation for No: " + reservationNo);
                     request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
@@ -125,7 +133,7 @@ public class StaffServlet extends HttpServlet {
                 }
 
                 // Get updated reservation and stay on same page
-                Reservation updatedReservation = reservationService.searchReservation(reservationNo);
+                Reservation updatedReservation = reservationFacade.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
                 request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                 break;
@@ -139,7 +147,7 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                Bill bill = billService.generateBill(reservationNo);
+                Bill bill = reservationFacade.generateBill(reservationNo);
                 if (bill == null) {
                     request.setAttribute("error", "Unable to generate bill for No: " + reservationNo);
                     request.getRequestDispatcher("/staff/home?action=searchReservation").forward(request, response);
@@ -160,7 +168,7 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                boolean success = reservationService.toggleCancel(reservationNo);
+                boolean success = reservationFacade.toggleCancel(reservationNo);
                 if (!success) {
                     request.setAttribute("error", "Unable to change reservation status for no:" + reservationNo);
                     request.setAttribute("reservation", reservationDAO.findByReservationNo(reservationNo));
@@ -169,7 +177,7 @@ public class StaffServlet extends HttpServlet {
                 }
 
                 // Get the updated reservation to display
-                Reservation updatedReservation = reservationService.searchReservation(reservationNo);
+                Reservation updatedReservation = reservationFacade.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
                 request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                 break;
@@ -187,7 +195,7 @@ public class StaffServlet extends HttpServlet {
                 Date checkOutDate = Date.valueOf(request.getParameter("checkOutDate"));
 
                 //Input values
-                Reservation updatedRes = reservationService.updateReservation(
+                Reservation updatedRes = reservationFacade.updateReservation(
                         reservationNo, name, address, contactNo, roomTypeId, checkInDate, checkOutDate
                 );
 
@@ -199,7 +207,7 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                Reservation updatedReservation = reservationService.searchReservation(reservationNo);
+                Reservation updatedReservation = reservationFacade.searchReservation(reservationNo);
                 request.setAttribute("reservation", updatedReservation);
                 request.getRequestDispatcher("/staff/staffReservationSearchResults.jsp").forward(request, response);
                 break;
@@ -240,7 +248,7 @@ public class StaffServlet extends HttpServlet {
                     return;
                 }
 
-                Reservation reservation = reservationService.searchReservation(reservationNo);
+                Reservation reservation = reservationFacade.searchReservation(reservationNo);
 
                 if (reservation == null) {
                     req.setAttribute("error", "Reservation not found for No: " + reservationNo);
@@ -255,7 +263,7 @@ public class StaffServlet extends HttpServlet {
                     singleReservationList.add(reservation);
                     req.setAttribute("reservations", singleReservationList);
                 } else {
-                    req.setAttribute("reservations", reservationService.searchByGuestContactNo(reservation.getGuest().getContactNo()));
+                    req.setAttribute("reservations", reservationFacade.searchByGuestContactNo(reservation.getGuest().getContactNo()));
                 }
 
                 req.setAttribute("reservation", reservation);
@@ -273,7 +281,7 @@ public class StaffServlet extends HttpServlet {
         // Search by guest contact number
         if ("contactNo".equalsIgnoreCase(searchType)) {
 
-            List<Reservation> list = reservationService.searchByGuestContactNo(searchValue);
+            List<Reservation> list = reservationFacade.searchByGuestContactNo(searchValue);
 
             if (list == null || list.isEmpty()) {
                 req.setAttribute("error", "No reservations found for contact number: " + searchValue);
