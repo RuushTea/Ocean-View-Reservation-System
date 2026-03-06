@@ -1,5 +1,6 @@
-package com.oceanview.reservation.dao;
+package com.oceanview.reservation.dao.mocks;
 
+import com.oceanview.reservation.dao.RoomDAO;
 import com.oceanview.reservation.model.Room;
 import com.oceanview.reservation.model.RoomType;
 

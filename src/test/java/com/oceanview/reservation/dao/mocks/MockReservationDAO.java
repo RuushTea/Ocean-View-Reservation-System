@@ -1,5 +1,6 @@
-package com.oceanview.reservation.dao;
+package com.oceanview.reservation.dao.mocks;
 
+import com.oceanview.reservation.dao.ReservationDAO;
 import com.oceanview.reservation.model.Reservation;
 
 public class MockReservationDAO extends ReservationDAO {

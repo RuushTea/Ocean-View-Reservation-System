@@ -1,6 +1,8 @@
 package com.oceanview.reservation.service;
 
-import com.oceanview.reservation.dao.*;
+import com.oceanview.reservation.dao.mocks.MockGuestDAO;
+import com.oceanview.reservation.dao.mocks.MockReservationDAO;
+import com.oceanview.reservation.dao.mocks.MockRoomDAO;
 import com.oceanview.reservation.model.Bill;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
