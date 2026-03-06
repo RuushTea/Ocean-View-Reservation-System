@@ -2,6 +2,7 @@ package com.oceanview.reservation.service;
 
 import com.oceanview.reservation.dao.SystemUserDAO;
 import com.oceanview.reservation.model.Admin;
+import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Staff;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,25 +72,25 @@ class AuthenticationServiceIntegrationTest {
 
     @Test
     void testVerifyGuestIdentity_InvalidReservationNo() {
-        var result = service.verifyGuestIdentity(99999, "9999999999");
+        Guest result = service.verifyGuestIdentity(99999, "9999999999");
         assertNull(result);
     }
 
     @Test
     void testVerifyGuestIdentity_InvalidContactNo() {
-        var result = service.verifyGuestIdentity(1, "99999999999");
+        Guest result = service.verifyGuestIdentity(1, "99999999999");
         assertNull(result);
     }
 
     @Test
     void testVerifyGuestIdentity_NullContactNo() {
-        var result = service.verifyGuestIdentity(1, null);
+        Guest result = service.verifyGuestIdentity(1, null);
         assertNull(result);
     }
 
     @Test
     void testVerifyGuestIdentity_ZeroReservationNo() {
-        var result = service.verifyGuestIdentity(0, "0123456789");
+        Guest result = service.verifyGuestIdentity(0, "0123456789");
         assertNull(result);
     }
 }
