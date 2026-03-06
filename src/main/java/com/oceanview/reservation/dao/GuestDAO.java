@@ -27,7 +27,7 @@ public class GuestDAO {
         }
     }
 
-    public void insertGuest(Guest guest) throws  SQLException{
+    public void insertGuest(Guest guest){
         String sql = "INSERT INTO guest (name, address, contactNo) VALUES (?, ?, ?)";
         try (Connection con = DBConnectionManager.getConnection(); PreparedStatement ps = con.prepareStatement(sql)){
 
@@ -35,6 +35,8 @@ public class GuestDAO {
             ps.setString(2, guest.getAddress());
             ps.setString(3, guest.getContactNo());
             ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to create guest by guest ID: " + e.getMessage());
         }
     }
 
@@ -51,6 +53,18 @@ public class GuestDAO {
             return true;
         } catch (Exception e){
             System.out.println("Failed to get guest by guest ID: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteGuest(int guestId) {
+        String sql = "DELETE FROM guest WHERE guestId = ?";
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, guestId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Failed to delete guest: " + e.getMessage());
             return false;
         }
     }
@@ -103,7 +117,7 @@ public class GuestDAO {
     }
 
     public Guest findByReservationNoAndContactNo(int reservationNo, String contactNo){
-        String sql = "SELECT g.* FROM reservation r JOIN guest g ON r.guestId = g.guestId WHERE r.reservationNo = ? AND g.contactNo = ?";
+        String sql = "SELECT g.* FROM reservation r JOIN guest g ON r.guestId = g.guestId WHERE r.reservationId = ? AND g.contactNo = ?";
 
         try (Connection con = DBConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

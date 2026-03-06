@@ -3,10 +3,11 @@ package com.oceanview.reservation.servlet;
 import com.oceanview.reservation.dao.RoomTypeDAO;
 import com.oceanview.reservation.model.Guest;
 import com.oceanview.reservation.model.Reservation;
-import com.oceanview.reservation.service.ReservationService;
 import com.oceanview.reservation.service.ReservationServiceImpl;
+import com.oceanview.reservation.service.facade.ReservationFacade;
+import com.oceanview.reservation.service.facade.ReservationFacadeInterface;
+import com.oceanview.reservation.service.BillServiceImpl;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,16 @@ import java.sql.Date;
 @WebServlet(name = "ReservationServlet", value = "/reservation")
 public class ReservationServlet extends HttpServlet {
 
-    private final ReservationService reservationService = new ReservationServiceImpl();
-    private final RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+    private final ReservationFacadeInterface reservationFacade;
+    private final RoomTypeDAO roomTypeDAO;
+
+    public ReservationServlet() {
+        this.reservationFacade = new ReservationFacade(
+            new ReservationServiceImpl(),
+            new BillServiceImpl()
+        );
+        this.roomTypeDAO = new RoomTypeDAO();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
@@ -30,7 +39,7 @@ public class ReservationServlet extends HttpServlet {
         if ("search".equals(action)){
             int reservationId = Integer.parseInt(request.getParameter("reservationId"));
 
-            Reservation res = reservationService.searchReservation(reservationId);
+            Reservation res = reservationFacade.searchReservation(reservationId);
 
             if (res == null){
                 request.setAttribute("error", "Reservation was not found");
@@ -55,7 +64,7 @@ public class ReservationServlet extends HttpServlet {
         //
         if ("cancel".equals(action)){
             int reservationId = Integer.parseInt(request.getParameter("reservationId"));
-            reservationService.cancelReservation(reservationId);
+            reservationFacade.cancelReservation(reservationId);
             return;
         }
 
@@ -74,7 +83,7 @@ public class ReservationServlet extends HttpServlet {
         //Handle cancel
         if ("cancel".equals(action)){
             int reservationId = Integer.parseInt(request.getParameter("reservationId"));
-            reservationService.cancelReservation(reservationId);
+            reservationFacade.cancelReservation(reservationId);
 
             try {
                 response.sendRedirect(request.getContextPath() + "/reservation/searchReservation.jsp");
@@ -95,7 +104,7 @@ public class ReservationServlet extends HttpServlet {
         Date checkIn = Date.valueOf(request.getParameter("checkInDate"));
         Date checkOut = Date.valueOf(request.getParameter("checkOutDate"));
 
-        Reservation reservation = reservationService.createReservation(guest, roomTypeId, checkIn, checkOut);
+        Reservation reservation = reservationFacade.createReservation(guest, roomTypeId, checkIn, checkOut);
 
         if (reservation == null){
             request.setAttribute("error", "No rooms available for the selected type or dates");

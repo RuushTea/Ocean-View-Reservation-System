@@ -22,7 +22,11 @@
         <label class="block text-sm font-semibold mb-2">Reservation ID</label>
         <input type="number" name="reservationId"
                class="w-full border border-slate-300 rounded-lg px-4 py-2 mb-4"
-               required/>
+               required
+               min="1"
+               max="9999999999"
+               oninput="if(this.value < 1) this.value = ''; if(this.value > 9999999999) this.value = 9999999999;"
+               placeholder="Enter reservation ID (positive number)"/>
 
         <button type="submit"
                 class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">

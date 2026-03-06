@@ -54,7 +54,8 @@
                 <input type="text"
                        name="username"
                        required
-                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none">
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none"
+                       placeholder="Enter username">
             </div>
 
             <div>
@@ -62,7 +63,8 @@
                 <input type="password"
                        name="password"
                        required
-                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none">
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none"
+                       placeholder="Enter password">
             </div>
 
             <button type="submit"

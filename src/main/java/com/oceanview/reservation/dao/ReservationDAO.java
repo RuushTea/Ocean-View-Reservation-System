@@ -53,6 +53,18 @@ public class ReservationDAO {
         }
     }
 
+    public boolean deleteReservation(int reservationId) {
+        String sql = "DELETE FROM reservation WHERE reservationId = ?";
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, reservationId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Failed to delete reservation: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean updateRoom(int reservationNo, int roomId){
         String sql = "UPDATE reservation SET roomId = ? WHERE reservationId = ?";
 

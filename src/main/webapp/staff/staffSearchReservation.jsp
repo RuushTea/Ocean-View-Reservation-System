@@ -28,16 +28,23 @@
             <!-- Search Type -->
             <div>
                 <label class="block text-sm font-semibold mb-1">Search By</label>
-                <select name="searchType" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="reservationNo">Reservation No</option>
-                    <option value="contactNo">Guest Contact No</option>
-                </select>
+                <label>
+                    <select name="searchType" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+                        <option value="reservationNo">Reservation No</option>
+                        <option value="contactNo">Guest Contact No</option>
+                    </select>
+                </label>
             </div>
 
             <div>
                 <label class="block text-sm font-semibold mb-1">Search Value</label>
-                <input class="w-full rounded-lg border border-slate-300 px-3 py-2"
-                       type="text" name="searchValue" required>
+                <input id="searchValue" class="w-full rounded-lg border border-slate-300 px-3 py-2"
+                       type="text" name="searchValue" required
+                       pattern="[0-9]{1,10}"
+                       title="Enter a valid reservation number or contact number"
+                       maxlength="10"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)"
+                       placeholder="Enter reservation number or contact number">
             </div>
 
             <div class="flex items-center gap-3">
@@ -62,5 +69,23 @@
     </div>
 
 </div>
+
+<script>
+    function updateSearchValidation() {
+        const searchValue = document.getElementById('searchValue');
+        const searchType = document.querySelector('select[name="searchType"]').value;
+
+        if (searchType === 'contactNo') {
+            searchValue.pattern = '[0-9]{10}';
+            searchValue.title = 'Contact number must be exactly 10 digits';
+            searchValue.placeholder = 'Enter 10-digit contact number';
+        } else {
+            searchValue.pattern = '[1-9][0-9]{0,9}';
+            searchValue.title = 'Reservation number must be a positive number';
+            searchValue.placeholder = 'Enter reservation number';
+        }
+    }
+</script>
+
 </body>
 </html>

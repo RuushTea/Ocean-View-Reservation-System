@@ -40,11 +40,18 @@
       Guests can easily create reservations online in just a few steps.
     </p>
 
-    <div class="mt-10">
+    <div class="mt-10 space-y-4">
       <a href="<%= request.getContextPath() %>/reservation"
          class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-10 py-4 text-lg font-semibold text-white hover:bg-blue-700 transition shadow-md">
         Make a Reservation
       </a>
+      
+      <div>
+        <a href="<%= request.getContextPath() %>/guest/view"
+           class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-10 py-4 text-lg font-semibold text-slate-700 hover:bg-slate-100 transition shadow-md">
+          View Your Reservation
+        </a>
+      </div>
     </div>
 
     <div class="mt-12 bg-slate-50 rounded-2xl border border-slate-200 p-6">
