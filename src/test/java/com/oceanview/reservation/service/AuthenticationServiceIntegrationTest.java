@@ -11,10 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class AuthenticationServiceIntegrationTest {
 
     private AuthenticationServiceImpl service;
+    private SystemUserDAO userDAO;
 
     @BeforeEach
     void setUp() {
         service = new AuthenticationServiceImpl();
+        userDAO = new SystemUserDAO();
     }
 
     // Failure cases without test data retention
