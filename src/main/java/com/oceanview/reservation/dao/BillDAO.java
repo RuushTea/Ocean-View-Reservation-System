@@ -30,7 +30,6 @@ public class BillDAO {
             return ps.executeUpdate() >= 1;
 
         } catch (Exception e) {
-            System.out.println("Bill upsert failed: " + e.getMessage());
             return false;
         }
     }
@@ -56,6 +55,17 @@ public class BillDAO {
         } catch (Exception e) {
             System.out.println("Bill find failed: " + e.getMessage());
             return null;
+        }
+    }
+
+    public void deleteBill(int billId) {
+        String sql = "DELETE FROM bill WHERE billId = ?";
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, billId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Failed to delete bill: " + e.getMessage());
         }
     }
 }

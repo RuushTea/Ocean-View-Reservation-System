@@ -86,7 +86,7 @@ public class RoomDAO {
     }
 
     public Room findByRoomId(int roomId){
-        String sql = "SELECT r.roomId, r.roomNumber, r.roomTypeId, rt.roomTypeName, rt.roomTypeRate " +
+        String sql = "SELECT r.roomId, r.roomNumber, r.roomTypeId, rt.roomTypeName, rt.ratePerNight " +
                 "FROM room r " +
                 "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
                 "WHERE r.roomId = ?";
@@ -157,5 +157,27 @@ public class RoomDAO {
             System.out.println("Failed to find available room for update: " + e.getMessage());
         }
         return null;
+    }
+
+    public int getFirstAvailableRoomType() {
+        String sql = "SELECT DISTINCT r.roomTypeId " +
+                "FROM room r " +
+                "JOIN room_type rt ON r.roomTypeId = rt.roomTypeId " +
+                "WHERE r.status = 'AVAILABLE' " +
+                "LIMIT 1";
+
+        try (Connection con = DBConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("roomTypeId");
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Failed to get first available room type: " + e.getMessage());
+        }
+        return -1;
     }
 }

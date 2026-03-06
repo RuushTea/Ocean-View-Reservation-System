@@ -24,7 +24,7 @@ class BillDAOTest {
     @Test
     void testInsertBill_InvalidReservationId() {
         // Insert with non-existent reservation ID should fail or succeed based on FK constraint
-        boolean result = dao.insertBill(99999, 3, 150.0, 450.0);
+        boolean result = dao.insertBill(999999999, 3, 150.0, 450.0);
         // DB will reject if FK constraint exists
         assertFalse(result);
     }
