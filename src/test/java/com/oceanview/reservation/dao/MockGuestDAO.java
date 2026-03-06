@@ -1,6 +1,5 @@
-package com.oceanview.reservation.dao.mocks;
+package com.oceanview.reservation.dao;
 
-import com.oceanview.reservation.dao.GuestDAO;
 import com.oceanview.reservation.model.Guest;
 
 // Simple mock implementations
