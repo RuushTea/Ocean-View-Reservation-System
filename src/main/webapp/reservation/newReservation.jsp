@@ -43,13 +43,13 @@
 
                     <div>
                         <label for="contactNo" class="block text-sm font-medium mb-1">Contact Number</label>
-                        <input type="tel" id="contactNo" name="contactNo" required maxlength="10"
-                               pattern="[0-9]{10}"
-                               title="Contact number must be exactly 10 digits"
+                        <input type="tel" id="contactNo" name="contactNo" required maxlength="15"
+                               pattern="[0-9]{8,}"
+                               title="Contact number must be more than 8 digits"
                                inputmode="numeric"
-                               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 10) this.value = this.value.slice(0,10);"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               placeholder="Enter 10-digit contact number"/>
+                               placeholder="Enter contact number"/>
                     </div>
 
                     <div class="md:col-span-2">
