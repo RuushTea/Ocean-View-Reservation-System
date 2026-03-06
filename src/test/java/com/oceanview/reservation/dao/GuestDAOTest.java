@@ -22,7 +22,7 @@ class GuestDAOTest {
     }
 
     @Test
-    void testInsertAndFindGuest() throws Exception {
+    void testInsertAndFindGuest_Success() throws Exception {
         Guest guest = new Guest();
         guest.setName("TestGuest" + System.currentTimeMillis());
         guest.setAddress("123 Main St");
@@ -36,7 +36,7 @@ class GuestDAOTest {
     }
 
     @Test
-    void testUpdateGuest() {
+    void testUpdateGuest_Success() {
         Guest guest = new Guest();
         guest.setGuestId(1);
         guest.setName("Updated Name");

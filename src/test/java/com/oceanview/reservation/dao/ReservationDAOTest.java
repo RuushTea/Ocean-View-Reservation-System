@@ -18,6 +18,22 @@ class ReservationDAOTest {
         dao = new ReservationDAO();
     }
 
+
+    @Test
+    void testGetAllReservations_Success() {
+        List<Reservation> result = dao.getAllReservations();
+        assertNotNull(result);
+    }
+
+    @Test
+    void testUpdateReservationDates_Success() {
+        Date checkIn = new Date(System.currentTimeMillis());
+        Date checkOut = new Date(System.currentTimeMillis() + 86400000);
+
+        boolean result = dao.updateReservationDates(1, checkIn, checkOut);
+        assertFalse(result);
+    }
+
     @Test
     void testFindByReservationNo_NotFound() {
         Reservation result = dao.findByReservationNo(99999);
@@ -41,20 +57,5 @@ class ReservationDAOTest {
         List<Reservation> result = dao.findByContactNo("9999999999");
         assertNotNull(result);
         assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testGetAllReservations() {
-        List<Reservation> result = dao.getAllReservations();
-        assertNotNull(result);
-    }
-
-    @Test
-    void testUpdateReservationDates() {
-        Date checkIn = new Date(System.currentTimeMillis());
-        Date checkOut = new Date(System.currentTimeMillis() + 86400000);
-
-        boolean result = dao.updateReservationDates(1, checkIn, checkOut);
-        assertFalse(result);
     }
 }

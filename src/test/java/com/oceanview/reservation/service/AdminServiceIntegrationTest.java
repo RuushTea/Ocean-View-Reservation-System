@@ -34,7 +34,7 @@ class AdminServiceIntegrationTest {
         createdUserIds.clear();
     }
     private String generateUniqueEmail() {
-        return "teststaff_" + UUID.randomUUID().toString().substring(0, 8) + "@h.com";
+        return "teststaff_" + UUID.randomUUID().toString().substring(0, 8) + "@gmail.com";
     }
 
     private void trackUser(int userId) {
@@ -120,7 +120,7 @@ class AdminServiceIntegrationTest {
     }
 
     @Test
-    void testCreateStaff_ValidInputs() {
+    void testCreateStaff_Success() {
         String uniqueEmail = generateUniqueEmail();
         boolean result = service.createStaff(uniqueEmail, "password123", "Test Staff Member");
         assertTrue(result);
