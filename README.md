@@ -43,6 +43,41 @@ A comprehensive web-based room reservation system for Ocean View Resort built wi
 - **Contextual Help**: Role-specific assistance for system features
 
 
+## Database Setup
+
+1. Install **MySQL 8+** and make sure it is running.
+
+2. Import the database file located in the project:
+
+database/ocean_view_resort.sql
+
+You can import it using **MySQL Workbench**:
+
+- Open MySQL Workbench
+- Go to **Server → Data Import**
+- Select **Import from Self-Contained File**
+- Choose `MySQL database structure and data.sql`
+- Click **Start Import**
+
+3. The script will automatically create the database and tables.
+
+## Database Connection
+
+The application connects using:
+
+jdbc:mysql://127.0.0.1:3306/ocean_view_resort
+
+If your MySQL username or password is different, update them in:
+`
+DBConnectionManager.java
+`
+
+## Running the Application
+
+1. Import the project into **IntelliJ IDEA**.
+2. Ensure **MySQL is running** and the database has been imported.
+3. Run the project using **Apache Tomcat 9**.
+
 ## Testing
 
 ### Testing Strategy
